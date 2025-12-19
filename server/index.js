@@ -9,6 +9,7 @@ const dbConnect = require('./init/mongodb');
 const {port}=require('./config/keys');
 const { authRoute, userRoute, categoryRoute, orderRoute, productRoute, reviewRoute, productDetailRoute, checkoutRoute, likeRoute } = require('./routes');
 const errorHandler = require('./middlewares/errorHandler');
+const cookieParser = require('cookie-parser');
 
 // Database Connection
 dbConnect();
@@ -19,7 +20,8 @@ const app=express();
 // middlewares
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
-app.use(cors());
+app.use(cors({credentials:true}));
+app.use(cookieParser());
 
 // for image
 app.use('/images',express.static(path.join(__dirname,"uploads")));

@@ -12,6 +12,8 @@ router.post('/signup',authValidator.signupValidator,validate,authController.sign
 
 router.post('/signin',authValidator.signinValidator,validate,authController.signinController);
 
+router.post('/logout',authController.logout);
+
 //verify user
 router.post('/verify-email-code',isAuth,authController.verifyEmailCode);
 

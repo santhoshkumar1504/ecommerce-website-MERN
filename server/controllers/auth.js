@@ -1,9 +1,11 @@
 const User = require('../models/User');
+const cookie=require('cookie-parser');
 const hashPassword = require('../utils/hashPassword');
 const comparePassword=require('../utils/comparePassword');
 const generateToken=require('../utils/generateToken');
 const generateCode = require('../utils/generateCode');
 const sendEmail = require('../utils/sendEmail');
+const { node_env } = require('../config/keys');
 
 const signupController=async (req,res,next)=>{
     try{
@@ -19,7 +21,17 @@ const signupController=async (req,res,next)=>{
 
       const hashedPassword=await hashPassword(password);
 
-      await User.insertOne({name:name,email:email,password:hashedPassword,role:role,phone:phone,pincode:pincode});
+      const user=new User({name:name,email:email,password:hashedPassword,role:role,phone:phone,pincode:pincode});
+      await user.save();
+
+    const token=generateToken(user);
+
+    res.cookie('token',token,{
+      httpOnly:true,
+      secure:true,
+      sameSite:node_env==='production' ? 'none' :'strict',
+      maxAge:7*24*60*60*1000
+    });
 
       res.status(200).json({code:200,status:true,message:"User signup successfully"});
     }
@@ -49,7 +61,14 @@ const signinController=async (req,res,next)=>{
 
     const token=generateToken(user);
 
-    res.status(200).json({code:200,status:true,message:"Login successful",data:token});
+    res.cookie('token',token,{
+      httpOnly:true,
+      secure:true,
+      sameSite:node_env==='production' ? 'none' :'strict',
+      maxAge:7*24*60*60*1000
+    });
+
+    res.status(200).json({code:200,status:true,message:"Login successful"});
   }
   catch(error)
   {
@@ -203,4 +222,22 @@ const resetPassword=async (req,res,next)=>{
   }
 }
 
-module.exports={signupController,signinController,forgotPasswordCode,verifyEmailCode,verifyEmail,resetPassword};
+const logout=async(req,res,next)=>{
+  try{
+    res.clearCookie('token',
+      {
+        httpOnly:true,
+        secure:true,
+        sameSite:node_env =='production' ? 'none' : 'strict'
+      }
+    )
+
+    res.status(200).json({code:200,status:true,message:"Logged Out"});
+  }
+  catch(error)
+  {
+    next(error);
+  }
+}
+
+module.exports={signupController,signinController,forgotPasswordCode,verifyEmailCode,verifyEmail,resetPassword,logout};
