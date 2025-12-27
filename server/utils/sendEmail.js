@@ -18,7 +18,10 @@ const sendEmail=async ({emailTo,subject,code,content,subContent})=>{
         html:`
         <div>
         <center>
-            <h2>ECOMMERCE</h2>
+            <h2 style="font-family:"Arial, Helvetica, sans-serif";background-image: linear-gradient(to right, #cc5500, #ffbf00);
+">SHOPNEXA</h2>
+            <h4>Next Level Shopping</h4>
+            <br>
             <h3 style="margin:3px;padding:2px;">Use this below ${subContent} to ${content}</h3>
             <p style="margin:3px;padding:2px;">
                 <strong>${subContent}:</strong> ${code}

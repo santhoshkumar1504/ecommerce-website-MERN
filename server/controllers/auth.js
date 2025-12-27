@@ -6,6 +6,7 @@ const generateToken=require('../utils/generateToken');
 const generateCode = require('../utils/generateCode');
 const sendEmail = require('../utils/sendEmail');
 const { node_env } = require('../config/keys');
+const sendNodification = require('../utils/emailNotification');
 
 const signupController=async (req,res,next)=>{
     try{
@@ -31,6 +32,13 @@ const signupController=async (req,res,next)=>{
       secure:true,
       sameSite:node_env==='production' ? 'none' :'strict',
       maxAge:7*24*60*60*1000
+    });
+
+    await sendNodification({
+      emailTo:email,
+      subject:"Welcome to Our Platform",
+      head:`Hello ${name},<br>Welcome to ShopNexa!, We're excited to have you join our community.<br>`,
+      body:"Your account has been successfully created, and you can now explore all the features and services we offer."
     });
 
       res.status(200).json({code:200,status:true,message:"User signup successfully"});
@@ -98,6 +106,8 @@ const forgotPasswordCode=async (req,res,next)=>{
     })
 
     user.forgotPasswordCode=code;
+    user.passexpiresAt=Date.now()+24*60*60*1000;
+
     await user.save();
 
     res.status(200).json({code:200,status:true,message:"Forgot code email is send successfully"});
@@ -131,6 +141,7 @@ const verifyEmailCode=async(req,res,next)=>{
     const code=generateCode(6);
     
     user.verificationCode=code;
+    user.emailOtpExpiresAt=Date.now()*24*60*60*1000;
     await user.save();
 
     await sendEmail({
@@ -169,6 +180,12 @@ const verifyEmail=async(req,res,next)=>{
       throw new Error("Code is mismatched");
     }
 
+    if(user.emailOtpExpiresAt<Date.now())
+    {
+      res.code=401;
+      throw new Error("OTP expired");
+    }
+
     user.isVerified=true;
     user.verificationCode=null;
     await user.save();
@@ -196,6 +213,12 @@ const resetPassword=async (req,res,next)=>{
     {
       res.code=400;
       throw new Error("Code doesn't match");
+    }
+
+    if(user.passexpiresAt< Date.now())
+    {
+      res.code=401;
+      throw new Error("OTP expired");
     }
 
     const tempPass=generateCode(6);

@@ -5,12 +5,21 @@ const createReview=async (req,res,next)=>{
         const {id}=req.params;
         const {userId}=req.user;
         const {name,rating,comment}=req.body;
-        const product=await Product.findById(id);
+        const product=await Product.findById(id);        
         if(!product)
         {
             res.code=404;
             throw new Error("Product is not found");
         }
+        for(let i=0;i<product.reviews.length;i++)
+        {
+        if(product.reviews[i].user==userId)
+        {
+            res.code=400;
+            throw new Error("You reviewed already");
+        }
+        }
+        
         const oldNumReview = product.numReview;
         const oldRating = product.ratings;
 

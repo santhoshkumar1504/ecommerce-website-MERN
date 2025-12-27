@@ -11,7 +11,8 @@ const checkoutSchema=new mongoose.Schema(
             type:mongoose.Types.ObjectId,
             ref:"users",
             required:true
-        }
+        },
+        quantity:Number
     },{timestamps:true}
 );
 

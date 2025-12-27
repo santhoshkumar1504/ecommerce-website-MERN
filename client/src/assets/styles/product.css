@@ -1,0 +1,125 @@
+/* ===============================
+   PRODUCT GRID CONTAINER
+================================ */
+
+.maincontainer {
+  padding: 0 20px;
+}
+
+.main-p {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 20px;
+}
+
+/* ===============================
+   PRODUCT CARD
+================================ */
+
+.products {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.products:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* ===============================
+   PRODUCT IMAGE
+================================ */
+
+.product-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* ===============================
+   PRODUCT DETAILS
+================================ */
+
+.product-detail {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.product-detail strong {
+    text-align: center;
+  font-size: 15px;
+  color: #000;
+}
+
+/* ===============================
+   REVIEWS & RATINGS
+================================ */
+
+.review {
+  font-size: 13px;
+  color: #4a4a4a;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.star {
+  color: #f4c150;
+  font-size: 20px;
+  vertical-align: middle;
+}
+
+/* ===============================
+   BUTTONS
+================================ */
+
+.products .btn {
+  font-size: 13px;
+  margin-top: 4px;
+  padding: 6px 20px;
+  font-family:Verdana, Geneva, Tahoma, sans-serif;
+  border-radius: 6px;
+}
+
+.products .btn-danger {
+  background-color: #ff4d4d;
+  border: none;
+}
+
+.products .btn-danger:hover {
+  background-color: #e63939;
+}
+
+.products .btn-primary {
+  background-color: #0d6efd;
+  border: none;
+}
+
+.products .btn-primary:hover {
+  background-color: #0b5ed7;
+}
+
+/* ===============================
+   MOBILE RESPONSIVE
+================================ */
+
+@media (max-width: 576px) {
+  .product-img {
+    height: 170px;
+  }
+
+  .products {
+    padding: 10px;
+  }
+}

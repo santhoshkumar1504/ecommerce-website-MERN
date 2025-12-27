@@ -6,6 +6,7 @@ const addToCheckOut=async(req,res,next)=>{
     try{
         const {id}=req.params;
         const {_id}=req.user;
+        const {quantity}=req.body;
 
         const product=await Product.findById(id);
          if(product)
@@ -31,7 +32,7 @@ const addToCheckOut=async(req,res,next)=>{
             throw new Error("User not found.")
         }
 
-        await Checkout.insertOne({productId:product._id,createdBy:user._id});
+        await Checkout.insertOne({productId:product._id,createdBy:user._id,quantity:quantity});
 
         res.status(200).json({code:200,status:true,message:"Product added to cart"})
     }

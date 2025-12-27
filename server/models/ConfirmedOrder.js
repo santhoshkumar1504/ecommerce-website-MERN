@@ -25,7 +25,7 @@ const confirmOrderSchema=new mongoose.Schema({
         requied:true,
         default:"Ordered"
     }
-})
+},{timestamps:true})
 
 const ConfirmedOrder=mongoose.model("orders",confirmOrderSchema);
 

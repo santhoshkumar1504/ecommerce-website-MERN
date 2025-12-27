@@ -16,4 +16,9 @@ const createReviewValidator=[
     check("comment").notEmpty().withMessage("Comment is required")
 ]
 
-module.exports={createProductValidator,createReviewValidator};
+const likedProductValidator=[
+    check("product").notEmpty().withMessage("Product Name is required"),
+    check("category").notEmpty().withMessage("Category is required")
+]
+
+module.exports={createProductValidator,createReviewValidator,likedProductValidator};

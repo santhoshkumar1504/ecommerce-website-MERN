@@ -18,8 +18,12 @@ const sendNodification=async ({emailTo,subject,head,body})=>{
         html:`
         <div>
         <center>
-            <h2>ECOMMERCE</h2>
+            <h2 style="font-family:"Arial, Helvetica, sans-serif"; background-image: linear-gradient(to right, #cc5500, #ffbf00);
+">SHOPNEXA</h2>
+            <h4>Next Level Shopping</h4>
+            <br>
             <h3 style="margin:3px;padding:2px;">${head}</h3>
+            <br>
             <p style="margin:3px;padding:2px;">
                 <strong>${body}</strong>
             </p>

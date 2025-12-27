@@ -10,8 +10,9 @@ const likedProductSchema=new mongoose.Schema({
         type:mongoose.Types.ObjectId,
         ref:"users",
         required:true
-    }
-});
+    },
+    pics:String
+},{timestamps:true});
 
 
 const Likedproduct=mongoose.model("likedproducts",likedProductSchema);

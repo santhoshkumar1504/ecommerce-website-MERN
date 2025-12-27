@@ -21,6 +21,7 @@ router.get('/:id',productController.getOneProduct);
 
 router.put('/set-featured/:id',isAuth,isAdmin,idValidator,validate,productController.setFeaturedProduct);
 
+
 //file
 router.post('/upload',isAuth,isAdmin,upload.single("pic"),fileController.uploadFile);
 

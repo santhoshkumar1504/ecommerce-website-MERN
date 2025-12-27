@@ -1,0 +1,120 @@
+.contact-section {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.contact-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #222;
+}
+
+.contact-description {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.contact-email-box {
+  margin-top: 20px;
+  padding: 14px;
+  background: #f8f9fa;
+  border-left: 4px solid #0d6efd;
+}
+
+.contact-label {
+  font-weight: 600;
+  margin-right: 6px;
+  color: #333;
+}
+
+.contact-email {
+  color: #0d6efd;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.contact-email:hover {
+  text-decoration: underline;
+}
+
+.form-boxs {
+  display: flex;
+  gap: 30px;
+  padding: 30px;
+  max-width: 1200px;
+  margin: 40px auto;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+/* Google Map */
+.form-boxs iframe {
+  flex: 1;
+  width: 100%;
+  height: 420px;
+  border-radius: 8px;
+}
+
+/* Form container */
+.login-forms {
+  flex: 1;
+  padding: 20px;
+}
+
+/* Labels */
+.login-forms .form-label {
+  font-weight: 500;
+  color: #333;
+  margin-top: 10px;
+}
+
+/* Inputs & textarea */
+.login-forms .form-control {
+  margin-bottom: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* Button */
+.login-forms button {
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* ------------------ RESPONSIVE ------------------ */
+
+/* Tablets */
+@media (max-width: 992px) {
+  .form-boxs {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .form-boxs iframe {
+    height: 300px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+  .form-boxs {
+    padding: 15px;
+  }
+
+  .form-boxs iframe {
+    height: 250px;
+  }
+
+  .login-forms {
+    padding: 10px;
+  }
+}

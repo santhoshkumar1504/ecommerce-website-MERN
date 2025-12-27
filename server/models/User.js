@@ -25,6 +25,14 @@ const userSchema=new mongoose.Schema(
         },
         forgotPasswordCode:String,
         verificationCode:String,
+        passexpiresAt:{
+            type:Number,
+            default:0
+        },
+        emailOtpExpiresAt:{
+            type:Number,
+            default:0
+        },
         isVerified:{
             type:Boolean,
             default:false
@@ -40,7 +48,13 @@ const userSchema=new mongoose.Schema(
         phone:{
             type:String,
             required:true
-        }
+        },
+        likedProducts:[
+            {
+                product:String,
+                category:String
+            }
+        ]
     },
     {timestamps:true}
 )
