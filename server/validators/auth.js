@@ -4,9 +4,7 @@ const signupValidator=[
     check("name").notEmpty().withMessage("User name is required"),
     check("email").isEmail().withMessage("Invalid email").notEmpty().withMessage("Email is required"),
     check("password").isLength({min:6}).withMessage("Password should be length of 6 character").notEmpty().withMessage("Password is requied"),
-    check("phone").notEmpty().withMessage("Phone number is required"),
-    check("pincode").notEmpty().withMessage("Pincode is required")
-]
+    check("phone").notEmpty().withMessage("Phone number is required")]
 
 const signinValidator=[
     check("email").isEmail().withMessage("Invalid email").notEmpty().withMessage("Email is required"),

@@ -1,37 +1,80 @@
 import '../assets/styles/auth.css';
 import logo from '../assets/logo.png';
+import { useState } from 'react';
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 
 const Register = () => {
+
+  const navigate=useNavigate();
+
+  const [formData,setFormData]=useState({
+    name:"",
+    email:"",
+    password:"",
+    phone:""
+  })
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/v1/auth/signup",
+        formData,
+        { withCredentials: true }
+      );
+
+      toast.success("Signup successful 🎉");
+
+      // navigate after short delay so toast is visible
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
+
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Signup failed ❌"
+      );
+    }
+  }
+
   return (
     <div className='form-box'>
         <div className='login-form'>
     
-          <form action="" method="post">
+          <form onSubmit={handleSubmit}>
             <img src={logo} alt="logo" className='logo'/>
             <h4 className='text-center text-primary mt-2'>SIGN UP</h4>
 
              <label htmlFor="name" className='form-label'>Name</label>
-            <input type="text" name="name" id="name" className='form-control' placeholder='Enter user name'/>
+            <input type="text" name="name" id="name" className='form-control' placeholder='Enter user name' required title="Enter your full name" onChange={handleChange}/>
     
             <label htmlFor="email" className='form-label'>Email</label>
-            <input type="email" name="email" id="email" className='form-control' placeholder='Enter your email'/>
+            <input type="email" name="email" id="email" className='form-control' placeholder='Enter your email' pattern='[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$' required title="Enter a valid email address" onChange={handleChange}/>
     
             <label htmlFor="password" className='form-label mt-2'>Password</label>
-            <input type="password" name="password" id="password" className='form-control' placeholder='Enter your password'/>
+            <input type="password" name="password" id="password" className='form-control' placeholder='Enter your password' required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}" 
+       title="Must contain at least 8 characters, including 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character (!@#$%^&*)" onChange={handleChange}/>
 
             <label htmlFor="phone" className='form-label mt-2'>Phone</label>
-            <input type="tel" name="phone" id="phone" className='form-control' placeholder='Enter your phone number'/>
+            <input type="tel" name="phone" id="phone" className='form-control' placeholder='Enter your phone number' required title="Enter your phone number (e.g. 638-456-7890)" onChange={handleChange}/>
             
-            <label htmlFor="pincode" className='form-label mt-2'>Pincode</label>
-            <input type="number" name="password" id="password" className='form-control' placeholder='Enter area pincode'/>
-    
             <div className='d-grid gap-2'>
-            <button type="submit" className='btn btn-success mt-3'>Signup</button>
+              
+            <button type="submit" className='btn btn-success mt-3' title='signup'>Signup</button>
             </div>
           </form>
           <hr />
-          <p className='text-center mt-1'>Already have an account? <a href="/login">Signin</a> 
+          <p className='text-center mt-1'>Already have an account? <a href="/login" title='signin'>Signin</a> 
               
     </p>
         </div>

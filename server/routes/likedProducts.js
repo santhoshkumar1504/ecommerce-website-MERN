@@ -9,7 +9,7 @@ const router=express.Router();
 
 router.post('/addliked/:id',isAuth,idValidator,validate,likedproductController.addToLiked);
 
-router.get('/',likedproductController.getMyLikedProducts);
+router.get('/',isAuth,likedproductController.getMyLikedProducts);
 
 router.post('/liked-product',isAuth,productValidator.likedProductValidator,validate,likedproductController.setLikedProducts);
 

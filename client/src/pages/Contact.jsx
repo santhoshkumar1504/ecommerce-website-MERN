@@ -1,5 +1,4 @@
 import '../assets/styles/auth.css';
-import logo from '../assets/logo.png';
 import '../assets/styles/contact.css';
 
 const Contact = () => {
@@ -22,6 +21,12 @@ const Contact = () => {
     <strong>Email us at:</strong>{' '}
     <a href="mailto:shopnexa.onlineshop@gmail.com">
       shopnexa.onlineshop@gmail.com
+    </a>
+  </div>
+    <div className="contact-email">
+    <strong>Contact us at:</strong>{' '}
+    <a href="tel:+919874561232">
+      +919874561232
     </a>
   </div>
 </div>

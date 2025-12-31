@@ -9,12 +9,52 @@ import { MdOutlineShoppingCartCheckout } from "react-icons/md";
 import { FaCartShopping } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
 import { MdLogin } from "react-icons/md";
-
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 import logo from '../../assets/logo.png';
 import '../../App.css'
+import { useEffect, useState } from 'react';
 
 const HeadNavbar=()=> {
+const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
+  // 🔹 Check auth on page load
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/v1/users", {
+        withCredentials: true,
+      })
+      .then(() => {
+        setIsAuthenticated(true);
+      })
+      .catch(() => {
+        setIsAuthenticated(false);
+      });
+  }, []);
+
+  // 🔹 Logout handler
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        "http://localhost:5000/api/v1/auth/logout",
+        {},
+        { withCredentials: true }
+      );
+
+      toast.success("Logged out successfully");
+      setIsAuthenticated(false);
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
+
+    } catch (error) {
+      toast.error("Logout failed");
+    }
+  };
+
   return (
     <Navbar expand="lg" className="bg-body-tertiary text-center">
       <Container>
@@ -59,10 +99,13 @@ const HeadNavbar=()=> {
                 LogIn
               </NavDropdown.Item>
 
-              <NavDropdown.Item href="#action/3.4" className='auth'>
-              <MdLogout className='me-2'/>
+            {isAuthenticated && (
+              <NavDropdown.Item onClick={handleLogout}>
+                <MdLogout className="me-2" />
                 Logout
               </NavDropdown.Item>
+            )}
+
             </NavDropdown>
           </Nav>
 

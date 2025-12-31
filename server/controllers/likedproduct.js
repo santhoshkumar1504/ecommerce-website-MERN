@@ -50,42 +50,54 @@ const addToLiked = async (req, res, next) => {
 }
 
 
-const getMyLikedProducts=async (req,res,next)=>{
-    try{
-        const {q}=req.query;
-        let query={};
+const getMyLikedProducts = async (req, res, next) => {
+  try {
+    const { q } = req.query;
+    const userId = req.user._id;
 
-        if(q)
-        {
-            const search=new RegExp(q,"i");
-            query={
-                $or:[{productName:search},
-             { brand: search },{category:search}]
-            };
-        }
-        const {_id}=req.user;  //req.user            _id
-        const product=await Likedproduct.find({createdBy:_id}).populate("productId");
+    let searchQuery = { createdBy: userId };
 
-        if(q)
-        {
-          const product=await LikedProduct.find(query);
-        }
-
-        if(!product)
-        {
-            res.code=404;
-            throw new Error("Product not found");
-        }
-
-        const count=await Likedproduct.countDocuments({createdBy:_id});
-
-        res.status(200).json({code:200,status:true,message:"Your LikedProducts",data:{product,count}});
+    if (q) {
+      const search = new RegExp(q, "i");
+      searchQuery = {
+        createdBy: userId,
+      };
     }
-    catch(error)
-    {
-        next(error);
-    }
-}
+
+    const products = await     await Likedproduct
+      .find(searchQuery)
+      .populate({
+        path: "productId",
+        match: q
+          ? {
+              $or: [
+                { productName: { $regex: q, $options: "i" } },
+                { brand: { $regex: q, $options: "i" } },
+                { category: { $regex: q, $options: "i" } },
+              ],
+            }
+          : {},
+      });
+
+    // remove null populated products (when search doesn't match)
+    const filteredProducts = products.filter(p => p.productId !== null);
+
+    const count = await Likedproduct.countDocuments({ createdBy: userId });
+
+    return res.status(200).json({
+      status: true,
+      message: "Your liked products",
+      data: {
+        product: filteredProducts,
+        count,
+      },
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 const setLikedProducts=async (req,res,next)=>{
     try{

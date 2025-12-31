@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import pagenotfount from '../assets/404.png'
 
 const Dashboard = () => {
   const [user, setUser] = useState(null)
@@ -29,10 +30,13 @@ const Dashboard = () => {
   if (error) {
     return <div className="text-center text-danger mt-5">{error} <br />
                <Link to='/login'>
-             <div className="btn btn-success mt-3 px-4">
+             <div className="btn btn-success mt-5 px-4">
                 Login
             </div>
-            </Link></div>
+            </Link>
+            <br />
+            <img src={pagenotfount} alt="404 Error" className='mt-5' style={{height:"50vh"}}/>
+            </div>
   }
 
   return (

@@ -10,7 +10,7 @@ const sendNodification = require('../utils/emailNotification');
 
 const signupController=async (req,res,next)=>{
     try{
-      const {name,email,password,role,phone,pincode}=req.body;
+      const {name,email,password,phone}=req.body;
 
       const isEmailExists=await User.findOne({email:email});
 
@@ -22,14 +22,14 @@ const signupController=async (req,res,next)=>{
 
       const hashedPassword=await hashPassword(password);
 
-      const user=new User({name:name,email:email,password:hashedPassword,role:role,phone:phone,pincode:pincode});
+      const user=new User({name:name,email:email,password:hashedPassword,phone:phone});
       await user.save();
 
     const token=generateToken(user);
 
     res.cookie('token',token,{
       httpOnly:true,
-      secure:true,
+      secure:false,
       sameSite:node_env==='production' ? 'none' :'strict',
       maxAge:7*24*60*60*1000
     });
@@ -41,7 +41,15 @@ const signupController=async (req,res,next)=>{
       body:"Your account has been successfully created, and you can now explore all the features and services we offer."
     });
 
-      res.status(200).json({code:200,status:true,message:"User signup successfully"});
+      return res.status(201).json({
+      status: true,
+      message: "Signup successful",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
     }
     catch(error)
     {
@@ -71,7 +79,7 @@ const signinController=async (req,res,next)=>{
 
     res.cookie('token',token,{
       httpOnly:true,
-      secure:true,
+      secure:false,
       sameSite:node_env==='production' ? 'none' :'strict',
       maxAge:7*24*60*60*1000
     });

@@ -16,9 +16,7 @@ const Productcontainer = ({detail}) => {
       
       <div className="main-p">
         {  data?.data?.productDetails?.map((product) => (
-        <div>
-           <Product data={product}/>
-        </div>
+           <Product data={product} key={product._id}/>
       ))}
       </div>
 

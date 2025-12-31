@@ -9,25 +9,25 @@ const Liked = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:5000/api/v1/liked')
+      .get("http://localhost:5000/api/v1/liked", {
+        withCredentials: true,
+      })
       .then((response) => {
-        setProducts(response.data.data.product)
+        setProducts(response.data.data.product);
       })
       .catch((error) => {
-        console.error(error)
-      })
-  }, [])
+        console.error(error.response?.data || error.message);
+      });
+  }, []);
 
   return (
     <div className="container-fluid my-2 maincontainer mb-4">
       <div className="main-p">
         {products.map((item) => (
-            <>
           <Forliked
             key={item._id}
             data={item}
           />
-          </>
         ))}
       </div>
     </div>
