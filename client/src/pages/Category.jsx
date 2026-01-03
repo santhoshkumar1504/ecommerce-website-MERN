@@ -1,20 +1,31 @@
-import React from 'react'
-import Productcontainer from '../components/product/ProductContainer'
+import { useEffect, useState } from "react";
+import axios from "axios";
+import CategorySection from "../components/product/CategorySection";
 
 const Category = () => {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/v1/categorys")
+      .then((res) => {
+        setCategories(res.data.data.categoryExist);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   return (
     <div>
-      <h3 className="mt-3 mb-1 about-title">Shoes</h3>
-      <hr className='hrline mb-3'/>
-    <Productcontainer  detail="category=shoes"/>
-      <h3 className="mt-3 mb-1 about-title">Laptops</h3>
-      <hr className='hrline mb-3'/>
-      <Productcontainer  detail="category=shoes"/>
-      <h3 className="mt-3 mb-1 about-title">Gadgets</h3>
-      <hr className='hrline mb-3'/>
-      <Productcontainer  detail="category=shoes"/>
+      {categories.map((category) => (
+        <CategorySection
+          key={category._id}
+          title={category.title}
+        />
+      ))}
     </div>
-  )
-}
+  );
+};
 
-export default Category
+export default Category;

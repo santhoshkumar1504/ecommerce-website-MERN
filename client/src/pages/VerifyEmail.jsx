@@ -5,7 +5,7 @@ import axios from 'axios';
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-const Email = () => {
+const VerifyEmail = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
 
@@ -14,14 +14,14 @@ const Email = () => {
 
     try {
       await axios.post(
-        "http://localhost:5000/api/v1/auth/forgot-password-code",
-        { email }
+        "http://localhost:5000/api/v1/auth/verify-email-code",
+        { email :email }
       );
 
       toast.success("Verification code sent to email");
 
       // 👉 navigate with email
-      navigate("/verify-code", {
+      navigate("/verify-email-code", {
         state: { email },
       });
 
@@ -60,4 +60,4 @@ const Email = () => {
   );
 };
 
-export default Email;
+export default VerifyEmail;

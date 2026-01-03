@@ -1,5 +1,7 @@
+const { senderEmail } = require("../config/keys");
 const User = require("../models/User");
 const comparePassword = require("../utils/comparePassword");
+const sendNodification = require("../utils/emailNotification");
 const hashPassword = require("../utils/hashPassword");
 
 const getMydetails=async (req,res,next)=>{
@@ -38,15 +40,6 @@ const updateMydetail=async (req,res,next)=>{
         throw new Error("User not found");
     }
 
-    if(email)
-    {
-        const isEmailExist=await User.findOne({email});
-        if(isEmailExist && email==isEmailExist.email)
-        {
-            res.code=400;
-            throw new Error("Email already exists");
-        }
-    }
 
     isUser.name=name ? name :isUser.name;
     isUser.email=email ? email :isUser.email;
@@ -185,4 +178,62 @@ const addAdmin=async(req,res,next)=>{
     }
 }
 
-module.exports={getMydetails,updateMydetail,getAllUsers,getOneUser,changePassword,addAdmin}
+const sendMessage=async(req,res,next)=>{
+    try{
+        const {name,email,phone,message}=req.body;
+        if(!name)
+        {
+            res.code=400;
+            throw new Error("Name is required");
+        }
+        if(!email)
+        {
+            res.code=400;
+            throw new Error("Email is required");
+        }
+        if(!phone)
+        {
+            res.code=400;
+            throw new Error("Phone Number is required");
+        }
+        if(!message)
+        {
+            res.code=400;
+            throw new Error("Message is required");
+        }
+
+  await sendNodification({
+  emailTo: senderEmail, // admin email
+  subject: "New Customer Contact Message – ShopNEXA",
+  head: `
+    <h2 style="color:#2c3e50;">New Customer Contact Message</h2>
+    <p>You have received a new message from a customer via the ShopNEXA contact form.</p>
+    <hr />
+  `,
+  body: `
+    <p><strong>Customer Name:</strong> ${name}</p>
+    <p><strong>Customer Email:</strong> ${email}</p>
+    <p><strong>Contact Number:</strong> ${phone || "Not provided"}</p>
+    <p><strong>Message:</strong></p>
+    <p style="background:#f4f4f4;padding:10px;border-radius:5px;">
+      ${message}
+    </p>
+    <br />
+    <p>Please respond to the customer as soon as possible.</p>
+    <br />
+    <p style="font-size:12px;color:#777;">
+      This message was sent from the ShopNEXA contact form.
+    </p>
+  `
+});
+
+res.status(200).json({code:200,status:true,message:"message sended"});
+
+    }
+    catch(error)
+    {
+        next(error);
+    }
+}
+
+module.exports={getMydetails,updateMydetail,getAllUsers,getOneUser,changePassword,addAdmin,sendMessage}

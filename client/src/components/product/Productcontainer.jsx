@@ -6,6 +6,7 @@ import axios from 'axios';
 const Productcontainer = ({detail}) => {
 
   const [data,setData]=useState();
+  
 
   useEffect(()=>{
     axios.get(`http://localhost:5000/api/v1/products?${detail}`).then(response=>{setData(response.data)}).catch((error)=>{console.log(error)});

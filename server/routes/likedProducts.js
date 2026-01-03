@@ -15,4 +15,6 @@ router.post('/liked-product',isAuth,productValidator.likedProductValidator,valid
 
 router.get('/recommentations',isAuth,likedproductController.getLikedProduct);
 
+router.delete('/:id',isAuth,likedproductController.deleteLikedProduct);
+
 module.exports=router;

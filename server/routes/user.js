@@ -9,6 +9,8 @@ const validate = require('../validators/validate');
 
 const router=express.Router();
 
+router.post('/send-message',userController.sendMessage);
+
 router.get('/',isAuth,userController.getMydetails);
 
 router.put('/update-profile',isAuth,authValidator.updateProfileValidator,validate,userController.updateMydetail);
@@ -20,6 +22,6 @@ router.get('/all-users/:id',isAuth,isAdmin,idValidator,validate,userController.g
 router.put('/add-admin/:id',isAuth,isAdmin,idValidator,validate,userController.addAdmin);
 
 //password change 
-router.post('/change-password',isAuth,authValidator.changePasswordValidator,validate,userController.changePassword);
+router.put('/change-password',isAuth,authValidator.changePasswordValidator,validate,userController.changePassword);
 
 module.exports=router;

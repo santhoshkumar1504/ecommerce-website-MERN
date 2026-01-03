@@ -15,9 +15,10 @@ router.post('/signin',authValidator.signinValidator,validate,authController.sign
 router.post('/logout',authController.logout);
 
 //verify user
-router.post('/verify-email-code',isAuth,authController.verifyEmailCode);
+router.post('/verify-email-code', authController.verifyEmailCode);
 
-router.post('/verify-email',isAuth,authValidator.verifyEmailValidator,validate,authController.verifyEmail);
+router.post('/verify-email', authValidator.verifyEmailValidator, validate, authController.verifyEmail);
+
 
 //password reset
 router.post('/forgot-password-code',authValidator.emailValidator,validate,authController.forgotPasswordCode);

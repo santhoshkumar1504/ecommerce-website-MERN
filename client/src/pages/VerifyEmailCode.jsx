@@ -5,19 +5,15 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const Verifycode = () => {
+const VerifyEmailCode = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
-  // get email from previous page
   const email = location.state?.email;
-
   const [code, setCode] = useState("");
 
-// prevent direct access
 useEffect(() => {
     if (!email) {
-      navigate("/send-code");
+      navigate("/verify-email");
     }
   }, [email, navigate]);
 
@@ -25,18 +21,17 @@ useEffect(() => {
     e.preventDefault();
 
     try {
-      await axios.post(
-        "http://localhost:5000/api/v1/auth/reset-password",
-        {
-          email,
-          code,
-        }
-      );
+  await axios.post(
+  "http://localhost:5000/api/v1/auth/verify-email",
+  {
+    email,
+    code
+  }
+);
+
 
       toast.success("Code verified successfully");
-
-      // go to login page 
-      navigate("/login");
+      navigate("/");
 
     } catch (error) {
       toast.error(error.response?.data?.message || "Invalid code");
@@ -73,4 +68,4 @@ useEffect(() => {
   );
 };
 
-export default Verifycode;
+export default VerifyEmailCode;

@@ -1,4 +1,5 @@
 const ConfirmedOrder = require("../models/ConfirmedOrder");
+const File = require("../models/File");
 const Product = require("../models/Products");
 const User = require("../models/User");
 const sendNodification = require("../utils/emailNotification");
@@ -86,25 +87,68 @@ const placeOrder=async (req,res,next)=>{
     }
 }
 
-const myOrders=async (req,res,next)=>{
-    try{
-       const {_id}=req.user;
+const myOrders = async (req, res, next) => {
+  try {
+    const { _id } = req.user
 
-       const order=await ConfirmedOrder.find({createdBy:_id}).populate("productDetail").sort({orderDate:-1});
+    const orders = await ConfirmedOrder.find({ createdBy: _id })
+      .populate({
+        path: "productDetail",
+        select: "productName productDesc price discountedPrice brand ratings numReview pic reviews"
+      })
+      .sort({ orderDate: -1 })
 
-       if(!order)
-       {
-        res.code=400;
-        throw new Error("Order not exists");
-       }
-
-        res.status(200).json({code:200,status:true,message:"My orders",data:{order}});
+    if (!orders || orders.length === 0) {
+      return res.status(200).json({
+        code: 200,
+        status: true,
+        message: "My orders",
+        data: { order: [] }
+      })
     }
-    catch(error)
-    {
-        next(error);
-    }   
+
+    const formattedOrders = await Promise.all(
+      orders.map(async (order) => {
+        let fileName = null
+
+        if (order.productDetail?.pic) {
+          const file = await File.findById(order.productDetail.pic).select("fileName")
+          fileName = file?.fileName || null
+        }
+
+        return {
+          _id: order._id,
+          status: order.status,
+          orderDate: order.orderDate,
+          orderQuantity: order.orderQuantity,
+          product: {
+            _id: order.productDetail?._id,
+            name: order.productDetail?.productName,
+            desc: order.productDetail?.productDesc,
+            price: order.productDetail?.price,
+            discountedPrice: order.productDetail?.discountedPrice,
+            brand: order.productDetail?.brand,
+            ratings: order.productDetail?.ratings,
+            numReview: order.productDetail?.numReview,
+            pic: fileName, 
+            reviews: order.productDetail?.reviews
+          }
+        }
+      })
+    )
+
+    res.status(200).json({
+      code: 200,
+      status: true,
+      message: "My orders",
+      data: { order: formattedOrders }
+    })
+
+  } catch (error) {
+    next(error)
+  }
 }
+
 
 const cancelOrder=async (req,res,next)=>{
     try{

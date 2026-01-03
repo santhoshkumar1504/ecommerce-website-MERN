@@ -64,7 +64,7 @@ const getMyLikedProducts = async (req, res, next) => {
       };
     }
 
-    const products = await     await Likedproduct
+    const products =await Likedproduct
       .find(searchQuery)
       .populate({
         path: "productId",
@@ -149,4 +149,32 @@ const getLikedProduct=async (req,res,next)=>{
     }
 }
 
-module.exports={addToLiked,getMyLikedProducts,setLikedProducts,getLikedProduct};
+const deleteLikedProduct = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    const {id } = req.params;
+
+    const likedProduct = await Likedproduct.findOne({
+      productId: id,
+      createdBy: userId
+    });
+
+    if (!likedProduct) {
+      return res.status(404).json({
+        message: "Liked product not found"
+      });
+    }
+
+    await Likedproduct.findByIdAndDelete(likedProduct._id);
+
+    res.status(200).json({
+      status: true,
+      message: "Liked product deleted successfully"
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+module.exports={addToLiked,getMyLikedProducts,setLikedProducts,getLikedProduct,deleteLikedProduct};

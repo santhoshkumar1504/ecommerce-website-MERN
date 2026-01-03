@@ -6,7 +6,7 @@ import { CiStar } from "react-icons/ci";
 
 const Forliked = ({data}) => {
   return (
-    <div className=''>
+    <div className='product-liked-container'>
       <div className="products">
             <img src={`http://localhost:5000/images/${data.pics}`} alt="imagename" className='product-img'/>
             <h6 className='product-detail mt-2'>{data.productId.productName}</h6>
@@ -18,7 +18,6 @@ const Forliked = ({data}) => {
             </div>
 
              <div className='my-1'>
-            <div className="btn btn-danger mx-1"><GrFavorite/></div>
             <div className="btn btn-primary mx-1">Add to Cart</div>
         </div>
 </div>

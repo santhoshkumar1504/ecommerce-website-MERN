@@ -127,85 +127,73 @@ const forgotPasswordCode=async (req,res,next)=>{
   }
 }
 
-const verifyEmailCode=async(req,res,next)=>{
-  try{
-    const {email}=req.user;
+const verifyEmailCode = async (req, res, next) => {
+  try {
+    const { email } = req.body;
 
-    const user=await User.findOne({email});
-    if(!user)
-    {
-      res.code=404;
-      throw new Error("User not found");
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    const isVerified=user.isVerified;
-
-    if(isVerified)
-    {
-      res.code=400;
-      throw new Error("Email already verified");
+    if (user.isVerified) {
+      return res.status(400).json({ message: "Email already verified" });
     }
 
-    const code=generateCode(6);
-    
-    user.verificationCode=code;
-    user.emailOtpExpiresAt=Date.now()*24*60*60*1000;
+    const code = generateCode(6);
+
+    user.verificationCode = code;
+    user.emailOtpExpiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
     await user.save();
 
     await sendEmail({
-      emailTo:user.email,
-      subject:"Account verification code",
+      emailTo: user.email,
+      subject: "Account verification code",
       code,
-      content:"verify your account",
-      subContent:"Code"
-    })
+      content: "Verify your account",
+      subContent: "Code"
+    });
 
-
-    res.status(200).json({code:200,status:true,message:"Email verification code send successfully"});
-  }
-  catch(error)
-  {
+    res.status(200).json({
+      status: true,
+      message: "Email verification code sent successfully"
+    });
+  } catch (error) {
     next(error);
   }
-}
+};
 
-const verifyEmail=async(req,res,next)=>{
-  try{
-    const {email}=req.user;
-    const {code}=req.body;
+const verifyEmail = async (req, res, next) => {
+  try {
+    const { email, code } = req.body;
 
-    const user=await User.findOne({email});
-
-    if(!user)
-    {
-      res.code=404;
-      throw new Error("User not found");
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    if(code!=user.verificationCode)
-    {
-      res.code=400;
-      throw new Error("Code is mismatched");
+    if (String(code) !== String(user.verificationCode)) {
+      return res.status(400).json({ message: "Code is mismatched" });
     }
 
-    if(user.emailOtpExpiresAt<Date.now())
-    {
-      res.code=401;
-      throw new Error("OTP expired");
+    if (user.emailOtpExpiresAt < Date.now()) {
+      return res.status(401).json({ message: "OTP expired" });
     }
 
-    user.isVerified=true;
-    user.verificationCode=null;
+    user.isVerified = true;
+    user.verificationCode = null;
+    user.emailOtpExpiresAt = null;
     await user.save();
 
-    res.status(200).json({code:200,status:true,message:"Email verified successfully"});
-    
-  }
-  catch(error)
-  {
+    res.status(200).json({
+      status: true,
+      message: "Email verified successfully"
+    });
+  } catch (error) {
     next(error);
   }
-}
+};
+
 
 const resetPassword=async (req,res,next)=>{
   try{

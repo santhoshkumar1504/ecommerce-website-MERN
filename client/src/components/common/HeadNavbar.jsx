@@ -19,6 +19,7 @@ import { useEffect, useState } from 'react';
 
 const HeadNavbar=()=> {
 const [isAuthenticated, setIsAuthenticated] = useState(false);
+const [userRole, setUserRole] = useState(null);
   const navigate = useNavigate();
   // 🔹 Check auth on page load
   useEffect(() => {
@@ -26,11 +27,13 @@ const [isAuthenticated, setIsAuthenticated] = useState(false);
       .get("http://localhost:5000/api/v1/users", {
         withCredentials: true,
       })
-      .then(() => {
+      .then((res) => {
         setIsAuthenticated(true);
+        setUserRole(res.data.data.isUser.role);
       })
       .catch(() => {
         setIsAuthenticated(false);
+        setUserRole(null);
       });
   }, []);
 
@@ -86,18 +89,26 @@ const [isAuthenticated, setIsAuthenticated] = useState(false);
               <NavDropdown.Item href="/dashboard">
               <FaRegUserCircle className='me-2'/>
               My Profile</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
+              <NavDropdown.Item href="/orders">
                 <MdOutlineShoppingCartCheckout className='me-2'/>My Orders
               </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.4"><MdFavoriteBorder className='me-2'/>
+              <NavDropdown.Item href="/likedproduct"><MdFavoriteBorder className='me-2'/>
                 Liked Products
               </NavDropdown.Item>
               <NavDropdown.Divider />
+              {isAuthenticated && (userRole === 1 || userRole === 2) && (
+                <NavDropdown.Item href="/admin/dashboard">
+                  <FaRegUserCircle className="me-2" />
+                  Admin Dashboard
+                </NavDropdown.Item>
+              )}
 
-              <NavDropdown.Item href="/login">
-              <MdLogin className='me-2'/>
-                LogIn
-              </NavDropdown.Item>
+              {!isAuthenticated && (
+                <NavDropdown.Item href="/login">
+                  <MdLogin className="me-2" />
+                  LogIn
+                </NavDropdown.Item>
+              )}
 
             {isAuthenticated && (
               <NavDropdown.Item onClick={handleLogout}>

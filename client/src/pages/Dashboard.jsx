@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
-import pagenotfount from '../assets/404.png'
+import { Link, Outlet, useNavigate } from 'react-router-dom'
+import usernotfount from '../assets/401.png'
 
 const Dashboard = () => {
+  const navigate=useNavigate();
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -28,22 +29,26 @@ const Dashboard = () => {
   }
 
   if (error) {
-    return <div className="text-center text-danger mt-5">{error} <br />
+    return <div className="text-center text-danger mt-5 fs-4 fw-bold">{error} <br />
                <Link to='/login'>
              <div className="btn btn-success mt-5 px-4">
                 Login
             </div>
             </Link>
             <br />
-            <img src={pagenotfount} alt="404 Error" className='mt-5' style={{height:"50vh"}}/>
+            <img src={usernotfount} alt="404 Error" className='mt-5' style={{height:"50vh"}}/>
             </div>
+  }
+
+  const verifyAccount=()=>{
+    navigate('/verify-email')
   }
 
   return (
     <div className="container my-4">
       <div className="card shadow-sm">
         <div className="card-header bg-primary text-white">
-          <h5 className="mb-0">My Profile</h5>
+          <h5 className="mb-0 py-2">My Profile</h5>
         </div>
 
         <div className="card-body">
@@ -59,7 +64,7 @@ const Dashboard = () => {
               {user.isVerified ? (
                 <span className="badge bg-success ms-2">Verified</span>
               ) : (
-                <span className="badge bg-warning ms-2">Not Verified</span>
+                <span className="badge bg-warning ms-2" style={{cursor:'pointer'}} onClick={verifyAccount}>Not Verified</span>
               )}
             </div>
           </div>
@@ -81,14 +86,20 @@ const Dashboard = () => {
         </div>
 
         <div className="card-footer text-end">
+          <Link to={'edit'}>
           <button className="btn btn-outline-primary me-2">
             Edit Profile
           </button>
+          </Link>
+          <Link to={'change-password'}>
           <button className="btn btn-outline-danger">
             Change Password
           </button>
+          </Link>
         </div>
       </div>
+
+      <Outlet/>
     </div>
   )
 }
