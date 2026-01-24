@@ -11,15 +11,16 @@ import { IoSearch } from "react-icons/io5";
 import { MdLogin } from "react-icons/md";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { TbAugmentedReality } from "react-icons/tb";
 
 import logo from '../../assets/logo.png';
 import '../../App.css'
 import { useEffect, useState } from 'react';
 
-const HeadNavbar=()=> {
-const [isAuthenticated, setIsAuthenticated] = useState(false);
-const [userRole, setUserRole] = useState(null);
+const HeadNavbar = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState(null);
   const navigate = useNavigate();
   // 🔹 Check auth on page load
   useEffect(() => {
@@ -62,17 +63,17 @@ const [userRole, setUserRole] = useState(null);
     <Navbar expand="lg" className="bg-body-tertiary text-center">
       <Container>
         <Navbar.Brand href="/">
-          <img src={logo} alt="logo" className='brand-logo'/>
+          <img src={logo} alt="logo" className='brand-logo' />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
 
-       <div className="input-group mx-2">
-  <input type="search" className="form-control" placeholder="Search" aria-label="product" aria-describedby="basic-addon2"/>
-  <span className="input-group-text" id="basic-addon2">
-  <IoSearch />
-    </span>
-</div>
+          <div className="input-group mx-2">
+            <input type="search" className="form-control" placeholder="Search" aria-label="product" aria-describedby="basic-addon2" />
+            <span className="input-group-text" id="basic-addon2">
+              <IoSearch />
+            </span>
+          </div>
           <Nav className="ms-auto fs-6">
             <Nav.Link href="/">Home</Nav.Link>
             <Nav.Link href="/products">Products</Nav.Link>
@@ -80,19 +81,19 @@ const [userRole, setUserRole] = useState(null);
             <Nav.Link href="/contact">Contact</Nav.Link>
             <Nav.Link href="#link" className='text-center'>
               <div className='cartNotify'>
-                     <FaCartShopping className='me-1 text-dark cart-icon'/>
-              <div className='cart-title me-1'>Cart</div>
-              <div className="cartCount">3</div>
+                <FaCartShopping className='me-1 text-dark cart-icon' />
+                <div className='cart-title me-1'>Cart</div>
+                <div className="cartCount">3</div>
               </div>
             </Nav.Link>
             <NavDropdown title="User " id="basic-nav-dropdown">
               <NavDropdown.Item href="/dashboard">
-              <FaRegUserCircle className='me-2'/>
-              My Profile</NavDropdown.Item>
+                <FaRegUserCircle className='me-2' />
+                My Profile</NavDropdown.Item>
               <NavDropdown.Item href="/orders">
-                <MdOutlineShoppingCartCheckout className='me-2'/>My Orders
+                <MdOutlineShoppingCartCheckout className='me-2' />My Orders
               </NavDropdown.Item>
-              <NavDropdown.Item href="/likedproduct"><MdFavoriteBorder className='me-2'/>
+              <NavDropdown.Item href="/likedproduct"><MdFavoriteBorder className='me-2' />
                 Liked Products
               </NavDropdown.Item>
               <NavDropdown.Divider />
@@ -110,12 +111,19 @@ const [userRole, setUserRole] = useState(null);
                 </NavDropdown.Item>
               )}
 
-            {isAuthenticated && (
-              <NavDropdown.Item onClick={handleLogout}>
-                <MdLogout className="me-2" />
-                Logout
-              </NavDropdown.Item>
-            )}
+              {isAuthenticated && (
+                <NavDropdown.Item as={Link} to="/3d">
+                  <TbAugmentedReality className="me-2" />
+                  3D Products
+                </NavDropdown.Item>
+              )}
+
+              {isAuthenticated && (
+                <NavDropdown.Item onClick={handleLogout}>
+                  <MdLogout className="me-2" />
+                  Logout
+                </NavDropdown.Item>
+              )}
 
             </NavDropdown>
           </Nav>

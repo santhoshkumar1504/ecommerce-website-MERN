@@ -15,6 +15,7 @@ import LikedProducts from '../pages/LikedProducts'
 import Orders from '../pages/Orders'
 import VerifyEmailCode from '../pages/VerifyEmailCode'
 import VerifyEmail from '../pages/VerifyEmail'
+import ARPage from '../ar/ARPage'
 
 
 const Allroutes = () => {
@@ -38,6 +39,9 @@ const Allroutes = () => {
       </Route>
       <Route path='likedproduct' element={<LikedProducts/>}/>
       <Route path='orders' element={<Orders/>}/>
+
+      {/* AR */}
+      <Route path='3d' element={<ARPage/>}/>
     </Routes>
   )
 }
