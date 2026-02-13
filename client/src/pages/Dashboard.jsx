@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Link, Outlet, useNavigate } from 'react-router-dom'
 import usernotfount from '../assets/401.png'
+import { IoArrowBackCircleSharp } from "react-icons/io5";
 
 const Dashboard = () => {
   const navigate=useNavigate();
@@ -44,8 +45,14 @@ const Dashboard = () => {
     navigate('/verify-email')
   }
 
+    const hangleClick=()=>{
+    navigate('/')
+  }
+
+
   return (
     <div className="container my-4">
+          <div className="p-3"><button className="btn py-2 px-3 btn-primary" onClick={hangleClick}><IoArrowBackCircleSharp className="me-1"/>Back</button></div>
       <div className="card shadow-sm">
         <div className="card-header bg-primary text-white">
           <h5 className="mb-0 py-2">My Profile</h5>

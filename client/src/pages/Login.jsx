@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { AiOutlineEye } from "react-icons/ai";
+import { AiOutlineEyeInvisible } from "react-icons/ai";
+import { IoArrowBackCircleSharp } from "react-icons/io5";
 
 import logo from '../assets/logo.png';
 import '../assets/styles/auth.css';
@@ -9,6 +12,7 @@ import '../assets/styles/auth.css';
 const Login = () => {
 
   const navigate = useNavigate();
+  const [pass,setPass]=useState(true);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -39,7 +43,17 @@ const Login = () => {
     }
   };
 
+  const changeTypeText=()=>{
+    setPass(!pass)
+  }
+
+  const hangleClick=()=>{
+    navigate('/')
+  }
+
   return (
+    <>
+    <div className="back p-3"><button className="btn py-2 px-3 btn-primary" onClick={hangleClick}><IoArrowBackCircleSharp className="me-1"/>Back</button></div>
     <div className='form-box'>
     <div className='login-form'>
 
@@ -51,7 +65,11 @@ const Login = () => {
         <input type="email" name="email" id="email" className='form-control' placeholder='Enter your email' onChange={handleChange}/>
 
         <label htmlFor="password" className='form-label mt-2'>Password</label>
-        <input type="password" name="password" id="password" className='form-control' placeholder='Enter your password' onChange={handleChange} />
+        <div class="input-group mb-3">
+        <input type={pass ? "password" : "text"} name="password" id="password" className='form-control' placeholder='Enter your password' onChange={handleChange} />
+          {pass && <span class="input-group-text" id="basic-addon2" onClick={changeTypeText}><AiOutlineEye /></span>}
+          {!pass && <span class="input-group-text" id="basic-addon2" onClick={changeTypeText}><AiOutlineEyeInvisible /></span>}
+          </div>
 
         <div className='d-grid gap-2'>
         <button type="submit" className='btn btn-success mt-3'>Login</button>
@@ -65,6 +83,7 @@ const Login = () => {
     </div>
 
     </div>
+    </>
   )
 }
 

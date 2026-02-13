@@ -54,7 +54,7 @@ useEffect(() => {
           <Liked products={likedProducts} />
         </>
       )}
-      <h3 className="mt-3 mb-1 about-title">Featured Products</h3>
+      {categories.length>0 && <div><h3 className="mt-3 mb-1 about-title">Featured Products</h3>
       <hr className='hrline mb-3'/>
       <Productcontainer  detail="isFeatured=true"/>
        {categories.map((category) => (
@@ -62,7 +62,8 @@ useEffect(() => {
           key={category._id}
           title={category.title}
         />
-      ))}
+      ))} </div>}
+      
       </>
   );
 };

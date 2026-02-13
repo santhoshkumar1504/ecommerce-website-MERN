@@ -1,13 +1,15 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link ,useNavigate} from "react-router-dom"
 import "../assets/styles/productlist.css"
 import Footer from "../components/common/Footer"
+import { IoArrowBackCircleSharp } from "react-icons/io5";
 
 const Orders = () => {
   const [products, setProducts] = useState([])
   const [isAuthenticated, setIsAuthenticated] = useState(true)
   const [loading, setLoading] = useState(true)
+    const navigate=useNavigate();
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -30,6 +32,11 @@ const Orders = () => {
     fetchOrders()
   }, [])
 
+
+        const hangleClick=()=>{
+    navigate('/')
+  }
+
   if (loading) return <h3>Loading orders...</h3>
 
   if (!isAuthenticated) {
@@ -43,6 +50,7 @@ const Orders = () => {
 
   return (
     <div className="liked-container">
+            <div className="p-3"><button className="btn py-2 px-3 btn-primary" onClick={hangleClick}><IoArrowBackCircleSharp className="me-1"/>Back</button></div>
       <h2 className="mt-3 mb-1 about-title">Your Orders</h2>
       <hr className="hrline mb-4" />
 

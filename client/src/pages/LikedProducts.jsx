@@ -1,15 +1,21 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import "../assets/styles/productlist.css"
 import { IoIosHeartDislike } from "react-icons/io"
 import Footer from "../components/common/Footer"
 import { toast } from "react-toastify"
+import { IoArrowBackCircleSharp } from "react-icons/io5";
 
 const LikedProducts = () => {
+    const navigate=useNavigate();
   const [products, setProducts] = useState([])
   const [isAuthenticated, setIsAuthenticated] = useState(true)
   const [loading, setLoading] = useState(true)
+
+      const hangleClick=()=>{
+    navigate('/')
+  }
 
   const disLike = async (productId) => {
     try {
@@ -64,6 +70,7 @@ const LikedProducts = () => {
 
   return (
     <div className="liked-container">
+      <div className="p-3"><button className="btn py-2 px-3 btn-primary" onClick={hangleClick}><IoArrowBackCircleSharp className="me-1"/>Back</button></div>
       <h2 className="mt-3 mb-1 about-title">Your Liked Products</h2>
       <hr className="hrline mb-4" />
 

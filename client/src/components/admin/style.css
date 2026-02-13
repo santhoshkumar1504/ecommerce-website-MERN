@@ -1,0 +1,359 @@
+.admin-container {
+    width: 100%;
+    min-height: 100vh;
+    padding: 0;
+}
+
+.admin-section {
+    width: 100%;
+    min-height: 100vh;
+    background-color: aliceblue;
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    grid-template-rows: 80px 1fr;
+    grid-template-areas:
+        "aside header"
+        "aside section-1";
+}
+
+/* HEADER */
+.header {
+    grid-area: header;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bolder;
+    font-size: 28px;
+    color: teal;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* SIDEBAR */
+.aside {
+    grid-area: aside;
+    background-color: white;
+    padding: 2rem 1rem;
+    border-right: 1px solid #eee;
+}
+
+.nav-icon {
+    display: block;
+    width: 100px;
+    margin: 1rem auto;
+}
+
+.aside h1 {
+    font-size: x-large;
+    color: rgb(228, 22, 22);
+}
+
+.aside h3 {
+    font-size: larger;
+}
+
+.menu-list {
+    padding: 1rem 0;
+}
+
+.menu-list li {
+    font-size: 17px;
+    color: rgb(72, 71, 71);
+    list-style: none;
+    padding: 6px 10px;
+    border-radius: 5px;
+}
+
+.menu-list li:hover {
+    background-color: rgb(239, 237, 237);
+    color: rgb(0, 183, 183);
+}
+
+/* MAIN SECTION */
+.section-1 {
+    grid-area: section-1;
+    padding: 2rem;
+    overflow-y: auto;
+    background-color: whitesmoke;
+}
+
+/* TABLE */
+.inner-table {
+    text-align: center;
+}
+.section-inner-head{
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 0px;
+}
+
+.p-img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .admin-section {
+        grid-template-columns: 200px 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-section {
+        grid-template-columns: 1fr;
+        grid-template-rows: 70px auto 1fr;
+        grid-template-areas:
+            "header"
+            "aside"
+            "section-1";
+    }
+
+    .aside {
+        text-align: center;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .section-1 {
+        padding: 1rem;
+    }
+
+    .header {
+        font-size: 22px;
+    }
+
+    .p-img {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+
+/* ===== Sidebar Toggle Button ===== */
+.menu-toggle {
+    display: none;
+    position: absolute;
+    left: 20px;
+    background: none;
+    border: none;
+    font-size: 22px;
+}
+
+/* Remove default link styling inside submenu */
+.submenu a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    padding: 6px 10px;
+    border-radius: 5px;
+}
+
+/* Remove visited purple */
+.submenu a:visited {
+    color: inherit;
+}
+
+/* Hover effect */
+.submenu a:hover {
+    color: teal;
+}
+
+/* Active link */
+.submenu a.active-link {
+    color: teal !important;
+    font-weight: 600;
+    background-color: rgba(0, 128, 128, 0.15);
+}
+
+/* Submenu */
+.submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    padding-left: 20px;
+}
+
+.submenu.open {
+    max-height: 200px;
+}
+
+.submenu-title {
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 5px;
+}
+
+.submenu-title:hover {
+    background-color: rgb(239, 237, 237);
+}
+
+/* ===== Mobile Design ===== */
+@media (max-width: 768px) {
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .aside {
+        position: fixed;
+        top: 0;
+        left: -260px;
+        height: 100%;
+        width: 250px;
+        transition: 0.3s ease;
+        z-index: 1000;
+    }
+
+    .aside.show-sidebar {
+        left: 0;
+    }
+
+    .header {
+        justify-content: center;
+        position: relative;
+    }
+}
+
+/* ===== Overlay ===== */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0,0,0,0.4);
+    z-index: 900;
+}
+
+/* ===== Arrow Animation ===== */
+.arrow {
+    float: right;
+    transition: transform 0.3s ease;
+}
+
+.arrow.rotate {
+    transform: rotate(180deg);
+}
+/* ===== Mobile Sidebar ===== */
+@media (max-width: 768px) {
+
+    .aside {
+        position: fixed;
+        top: 0;
+        left: -260px;
+        height: 100%;
+        width: 250px;
+        transition: 0.3s ease;
+        z-index: 1000;
+    }
+
+    .aside.show-sidebar {
+        left: 0;
+    }
+}
+
+
+/* Apply same style to ALL menu links */
+.menu-list a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    padding: 6px 10px;
+    border-radius: 5px;
+}
+
+/* Remove visited purple */
+.menu-list a:visited {
+    color: inherit;
+}
+
+/* Hover effect */
+.menu-list a:hover {
+    color: teal;
+}
+
+
+/* Prevent scroll when sidebar open */
+body.sidebar-open {
+    overflow: hidden;
+}
+
+/* Mobile Sidebar + Overlay */
+@media (max-width: 768px) {
+
+    .aside {
+        position: fixed;
+        top: 0;
+        left: -260px;
+        height: 100%;
+        width: 250px;
+        background: white;
+        transition: left 0.3s ease-in-out;
+        z-index: 1001;
+        box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+    }
+
+    .aside.show-sidebar {
+        left: 0;
+    }
+
+    .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.4);
+        z-index: 1000;
+        animation: fadeIn 0.2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+}
+
+/* ===== Action Buttons Responsive ===== */
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .action-buttons .btn {
+        width: 100%;
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+}
+
+/* Desktop */
+@media (min-width: 769px) {
+
+    .action-buttons {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .action-buttons .btn {
+        padding: 6px 14px;
+    }
+}
+
+@media (max-width: 769px) {
+    .action-buttons {
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .action-buttons .btn {
+        padding: 6px 14px;
+    }
+}

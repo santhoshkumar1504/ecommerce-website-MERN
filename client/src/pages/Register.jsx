@@ -4,11 +4,15 @@ import { useState } from 'react';
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import { AiOutlineEye } from "react-icons/ai";
+import { AiOutlineEyeInvisible } from "react-icons/ai";
+import { IoArrowBackCircleSharp } from "react-icons/io5";
 
 const Register = () => {
 
   const navigate=useNavigate();
+  const [pass,setPass]=useState(true);
+
 
   const [formData,setFormData]=useState({
     name:"",
@@ -47,7 +51,17 @@ const Register = () => {
     }
   }
 
+    const hangleClick=()=>{
+    navigate('/')
+  }
+
+    const changeTypeText=()=>{
+    setPass(!pass)
+  }
+
   return (
+    <>    <div className="back p-3"><button className="btn py-2 px-3 btn-primary" onClick={hangleClick}><IoArrowBackCircleSharp className="me-1"/>Back</button></div>
+   
     <div className='form-box'>
         <div className='login-form'>
     
@@ -62,8 +76,11 @@ const Register = () => {
             <input type="email" name="email" id="email" className='form-control' placeholder='Enter your email' pattern='[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$' required title="Enter a valid email address" onChange={handleChange}/>
     
             <label htmlFor="password" className='form-label mt-2'>Password</label>
-            <input type="password" name="password" id="password" className='form-control' placeholder='Enter your password' required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}" 
-       title="Must contain at least 8 characters, including 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character (!@#$%^&*)" onChange={handleChange}/>
+                    <div class="input-group">
+                    <input type={pass ? "password" : "text"} name="password" id="password" className='form-control' placeholder='Enter your password' required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}"  onChange={handleChange}  title="Must contain at least 8 characters, including 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character (!@#$%^&*)" />
+                      {pass && <span class="input-group-text" id="basic-addon2" onClick={changeTypeText}><AiOutlineEye /></span>}
+                      {!pass && <span class="input-group-text" id="basic-addon2" onClick={changeTypeText}><AiOutlineEyeInvisible /></span>}
+                      </div>
 
             <label htmlFor="phone" className='form-label mt-2'>Phone</label>
             <input type="tel" name="phone" id="phone" className='form-control' placeholder='Enter your phone number' required title="Enter your phone number (e.g. 638-456-7890)" onChange={handleChange}/>
@@ -80,6 +97,7 @@ const Register = () => {
         </div>
     
         </div>
+         </>
   )
 }
 
