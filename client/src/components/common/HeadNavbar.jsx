@@ -147,12 +147,12 @@ const HeadNavbar = () => {
                 </NavDropdown.Item>
               )}
 
-              {isAuthenticated && (
+              {/* {isAuthenticated && (
                 <NavDropdown.Item as={Link} to="/3d">
                   <TbAugmentedReality className="me-2" />
                   3D Products
                 </NavDropdown.Item>
-              )}
+              )} */}
 
               {isAuthenticated && (
                 <NavDropdown.Item onClick={handleLogout}>

@@ -15,7 +15,6 @@ import LikedProducts from '../pages/LikedProducts'
 import Orders from '../pages/Orders'
 import VerifyEmailCode from '../pages/VerifyEmailCode'
 import VerifyEmail from '../pages/VerifyEmail'
-import ARPage from '../ar/ARPage'
 import AdminDashboard from '../components/admin/AdminDashboard'
 import AllProducts from '../components/admin/AllProducts'
 import AdminLayout from '../components/admin/AdminLayout'
@@ -79,9 +78,7 @@ const Allroutes = () => {
         <Route path="notifications" element={<AdminNotifications />} />
       </Route>
 
-      {/* AR */}
-      <Route path='3d' element={<ARPage />} />
-    </Routes>
+      </Routes>
   )
 }
 
