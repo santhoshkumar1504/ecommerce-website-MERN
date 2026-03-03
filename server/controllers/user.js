@@ -82,25 +82,74 @@ const getAllUsers=async(req,res,next)=>{
     }
 }
 
-const getOneUser=async(req,res,next)=>{
-    try{
-        const {id}=req.params;
+const deleteUser = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const currentUserId = req.user._id; // logged-in user
 
-        const user=await User.findById(id).select("-forgotPasswordCode -verificationCode");
-        if(!user)
-        {
-            res.code=404;
-            throw new Error("User not found");
-        }
+    // Check if user exists
+    const user = await User.findById(id);
+    if (!user) {
+      res.code = 404;
+      throw new Error("User not found");
+    }
 
-         res.status(200).json({code:200,status:true,message:"User detail",data:{user}});
-       
+    // ❌ Prevent deleting yourself
+    if (id === currentUserId.toString()) {
+      res.code = 400;
+      throw new Error("You cannot delete your own account");
     }
-    catch(error)
-    {
-        next(error);
+
+    // ❌ Prevent deleting Super Admin
+    if (user.role === 4) {
+      res.code = 403;
+      throw new Error("Super Admin cannot be deleted");
     }
-}
+
+    await User.findByIdAndDelete(id);
+
+    res.status(200).json({
+      code: 200,
+      status: true,
+      message: "User deleted successfully"
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+const getOneUser = async (req, res, next) => {
+  try {
+    const { search } = req.query;
+
+    let query = {};
+
+    if (search) {
+      query = {
+        $or: [
+          { name: { $regex: search, $options: "i" } },
+          { email: { $regex: search, $options: "i" } },
+          { phone: { $regex: search, $options: "i" } }
+        ]
+      };
+    }
+
+    const users = await User.find(query)
+      .select("-forgotPasswordCode -verificationCode");
+
+    res.status(200).json({
+      code: 200,
+      status: true,
+      message: "User list",
+      data: { user: users }
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
 
 const changePassword=async(req,res,next)=>{
     try{
@@ -236,4 +285,4 @@ res.status(200).json({code:200,status:true,message:"message sended"});
     }
 }
 
-module.exports={getMydetails,updateMydetail,getAllUsers,getOneUser,changePassword,addAdmin,sendMessage}
+module.exports={getMydetails,updateMydetail,getAllUsers,getOneUser,changePassword,addAdmin,sendMessage,deleteUser}

@@ -2,3 +2,64 @@
     scroll-behavior: smooth;
     transition: 0.2s;
 }
+/* AI Generate Button */
+.ai-generate-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #6f42c1, #9f7aea);
+  color: white;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 8px;
+}
+
+.ai-generate-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(111, 66, 193, 0.4);
+}
+
+.ai-generate-btn:active {
+  transform: scale(0.97);
+}
+
+.ai-generate-btn.loading {
+  background: linear-gradient(135deg, #999, #bbb);
+  cursor: not-allowed;
+}
+
+/* Sparkle animation */
+.sparkle-icon {
+  animation: sparkleGlow 1.5s infinite alternate;
+}
+
+@keyframes sparkleGlow {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.15);
+  }
+}
+
+/* Spinner */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid white;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

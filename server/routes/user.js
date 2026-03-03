@@ -11,13 +11,18 @@ const router=express.Router();
 
 router.post('/send-message',userController.sendMessage);
 
+router.delete(
+  "/:id",isAuth,isAdmin,userController.deleteUser
+);
+
+
 router.get('/',isAuth,userController.getMydetails);
 
 router.put('/update-profile',isAuth,authValidator.updateProfileValidator,validate,userController.updateMydetail);
 
-router.get('/all-users',isAuth,isAdmin,userController.getAllUsers);
+router.get('/all-users',isAuth,isAdmin,userController.getOneUser);
 
-router.get('/all-users/:id',isAuth,isAdmin,idValidator,validate,userController.getOneUser);
+router.get('/all-user',isAuth,isAdmin,idValidator,validate,userController.getOneUser);
 
 router.put('/add-admin/:id',isAuth,isAdmin,idValidator,validate,userController.addAdmin);
 

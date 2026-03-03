@@ -65,10 +65,10 @@ const Login = () => {
         <input type="email" name="email" id="email" className='form-control' placeholder='Enter your email' onChange={handleChange}/>
 
         <label htmlFor="password" className='form-label mt-2'>Password</label>
-        <div class="input-group mb-3">
+        <div className="input-group mb-3">
         <input type={pass ? "password" : "text"} name="password" id="password" className='form-control' placeholder='Enter your password' onChange={handleChange} />
-          {pass && <span class="input-group-text" id="basic-addon2" onClick={changeTypeText}><AiOutlineEye /></span>}
-          {!pass && <span class="input-group-text" id="basic-addon2" onClick={changeTypeText}><AiOutlineEyeInvisible /></span>}
+          {pass && <span className="input-group-text" id="basic-addon2" onClick={changeTypeText}><AiOutlineEye /></span>}
+          {!pass && <span className="input-group-text" id="basic-addon2" onClick={changeTypeText}><AiOutlineEyeInvisible /></span>}
           </div>
 
         <div className='d-grid gap-2'>

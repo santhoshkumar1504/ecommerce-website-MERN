@@ -115,6 +115,14 @@
   background-color: #0b5ed7;
 }
 
+.like-btn{
+  padding: 10px 15px !important;
+  border-radius: 100% !important;
+}
+
+.btn-group-custom{
+  justify-content: center;
+}
 /* ===============================
    MOBILE RESPONSIVE
 ================================ */

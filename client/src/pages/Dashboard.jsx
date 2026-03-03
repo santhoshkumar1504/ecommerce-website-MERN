@@ -25,8 +25,11 @@ const Dashboard = () => {
   }, [])
 
   if (loading) {
-    return <div className="text-center mt-5">Loading profile...
-    </div>
+    return <div className="d-flex justify-content-center align-content-center">
+  <div className="spinner-border text-warning mt-5" role="status">
+    <span className="visually-hidden">Loading...</span>
+  </div>
+</div>
   }
 
   if (error) {

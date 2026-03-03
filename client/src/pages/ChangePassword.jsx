@@ -58,6 +58,11 @@ const ChangePassword = () => {
 
   return (
     <div className="edit-profile-container my-3">
+      {loading && <div className="d-flex justify-content-center align-content-center">
+  <div className="spinner-border text-warning mt-5" role="status">
+    <span className="visually-hidden">Loading...</span>
+  </div>
+</div>}
       <div className="edit-profile-card">
         <h3>Change Password</h3>
 

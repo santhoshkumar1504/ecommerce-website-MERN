@@ -13,15 +13,18 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { TbAugmentedReality } from "react-icons/tb";
-
+import { IoChevronDown } from "react-icons/io5";
 import logo from '../../assets/logo.png';
 import '../../App.css'
 import { useEffect, useState } from 'react';
+import { useCart } from '../../context/CartContext';
 
 const HeadNavbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState(null);
+  const [search, setSearch] = useState('');
   const navigate = useNavigate();
+  const { cartCount } = useCart();
   // 🔹 Check auth on page load
   useEffect(() => {
     axios
@@ -59,6 +62,11 @@ const HeadNavbar = () => {
     }
   };
 
+  const handleSearch = () => {
+    if (!search.trim()) return;
+    navigate(`/search?q=${search}`);
+  };
+
   return (
     <Navbar expand="lg" className="bg-body-tertiary text-center">
       <Container>
@@ -68,25 +76,53 @@ const HeadNavbar = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
 
-          <div className="input-group mx-2">
-            <input type="search" className="form-control" placeholder="Search" aria-label="product" aria-describedby="basic-addon2" />
-            <span className="input-group-text" id="basic-addon2">
+          <div className="input-group ig1 mx-2">
+            <input
+              type="search"
+              className="form-control"
+              value={search}
+              placeholder="Search products..."
+              aria-label="product"
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSearch();
+                }
+              }}
+            />
+
+            <span
+              className="input-group-text"
+              style={{ cursor: "pointer" }}
+              onClick={handleSearch}
+            >
               <IoSearch />
             </span>
           </div>
           <Nav className="ms-auto fs-6">
-            <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="/products">Products</Nav.Link>
-            <Nav.Link href="/categories">Categories</Nav.Link>
-            <Nav.Link href="/contact">Contact</Nav.Link>
-            <Nav.Link href="#link" className='text-center'>
-              <div className='cartNotify'>
-                <FaCartShopping className='me-1 text-dark cart-icon' />
-                <div className='cart-title me-1'>Cart</div>
-                <div className="cartCount">3</div>
-              </div>
+            <Nav.Link as={Link} to="/">Home</Nav.Link>
+            <Nav.Link as={Link} to="/products">Products</Nav.Link>
+            <Nav.Link as={Link} to="/categories">Categories</Nav.Link>
+            <Nav.Link as={Link} to="/contact">Contact</Nav.Link>
+            <Nav.Link as={Link} to="/cart" className='text-center position-relative'>
+              Cart 🛒
+              {cartCount > 0 && (
+                <span className="cart-badge">
+                  {cartCount}
+                </span>
+              )}
             </Nav.Link>
-            <NavDropdown title="User " id="basic-nav-dropdown">
+            <NavDropdown
+              id="basic-nav-dropdown"
+              className="custom-user-dropdown"
+              title={
+                <span className="user-dropdown-title">
+                  <FaRegUserCircle className="me-1" />
+                  User
+                  <IoChevronDown className="custom-user-arrow" />
+                </span>
+              }
+            >
               <NavDropdown.Item href="/dashboard">
                 <FaRegUserCircle className='me-2' />
                 My Profile</NavDropdown.Item>

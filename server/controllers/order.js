@@ -1,90 +1,194 @@
 const ConfirmedOrder = require("../models/ConfirmedOrder");
 const File = require("../models/File");
+const Notification = require("../models/Notification");
 const Product = require("../models/Products");
 const User = require("../models/User");
 const sendNodification = require("../utils/emailNotification");
 
-const getAllOrders=async (req,res,next)=>{
-    try{
-        const {q,size,page,status}=req.query;
-        const sizeNumber =parseInt(size) || 10;
-        const pageNumber=parseInt(page) || 1;
-        let query={};
+// const getAllOrders=async (req,res,next)=>{
+//     try{
+//         const {q,size,page,status}=req.query;
+//         const sizeNumber =parseInt(size) || 10;
+//         const pageNumber=parseInt(page) || 1;
+//         let query={};
 
-        if(q)
-        {
-            const search=new RegExp(q,"i");
-            query={
-                $or:[{status:search}]
-            };
-        }
+//         if(q)
+//         {
+//             const search=new RegExp(q,"i");
+//             query={
+//                 $or:[{status:search}]
+//             };
+//         }
 
-        if(status)
-        {
-            query={...query,category}
-        }
+//         if(status)
+// {
+//     query={...query,category}
+// }
 
-        const total=await ConfirmedOrder.countDocuments(query);
-        const pages=Math.ceil(total/sizeNumber);
+//         const total=await ConfirmedOrder.countDocuments(query);
+//         const pages=Math.ceil(total/sizeNumber);
 
-        const orders=await ConfirmedOrder.find(query).populate("createdBy","-password -forgotPasswordCode -verificationCode").populate("productDetail").sort({"orderDate":-1}).skip((pageNumber-1) * (sizeNumber)).limit(sizeNumber);
+//         const orders=await ConfirmedOrder.find(query).populate("createdBy","-password -forgotPasswordCode -verificationCode").populate("productDetail").sort({"orderDate":-1}).skip((pageNumber-1) * (sizeNumber)).limit(sizeNumber);
 
-        if(!orders)
-        {
-            res.code=400;
-            throw new Error("No orders placed");
-        }
+//         if(!orders)
+//         {
+//             res.code=400;
+//             throw new Error("No orders placed");
+//         }
 
-        res.status(200).json({code:200,status:true,message:"All orders",data:{orders,total,pages}});
+//         res.status(200).json({code:200,status:true,message:"All orders",data:{orders,total,pages}});
+//     }
+//     catch(error)
+//     {
+//         next(error);
+//     }
+// }
+
+const getAllOrders = async (req, res, next) => {
+  try {
+    const { q, page = 1, size = 10, status } = req.query;
+
+    const pageNumber = parseInt(page);
+    const sizeNumber = parseInt(size);
+
+    let matchStage = {};
+
+    // 🔎 Status filter
+    if (status) {
+      matchStage.status = status;
     }
-    catch(error)
-    {
-        next(error);
-    }
-}
 
-const placeOrder=async (req,res,next)=>{
-    try{
-        const {_id}=req.user; 
-        const {id}=req.params;
-        const {quantity}=req.body;
+    const search = q ? new RegExp(q, "i") : null;
 
-        const user=await User.findById(_id).select("-forgotPasswordCode -verificationCode");
-        const isProductExists=await Product.findById(id).select("-ratings -numReview -reviews");
-
-        if(!isProductExists)
-        {
-            res.code=400;
-            throw new Error("Product doesn't exists");
+    const pipeline = [
+      // ✅ Populate User
+      {
+        $lookup: {
+          from: "users",
+          localField: "createdBy",
+          foreignField: "_id",
+          as: "createdBy"
         }
-
-        if(isProductExists.quantity==0)
-        {
-            res.code=400;
-            throw new Error("Product is not available");
+      },
+      {
+        $unwind: {
+          path: "$createdBy",
+          preserveNullAndEmptyArrays: true
         }
+      },
 
-        if(user.isVerified==false)
-        {
-            res.code=401;
-            throw new Error("User not verified");
+      // ✅ Populate Product
+      {
+        $lookup: {
+          from: "products",
+          localField: "productDetail",
+          foreignField: "_id",
+          as: "productDetail"
         }
+      },
+      {
+        $unwind: {
+          path: "$productDetail",
+          preserveNullAndEmptyArrays: true
+        }
+      },
 
-        await ConfirmedOrder.insertOne({createdBy:user._id,productDetail:isProductExists._id,orderQuantity:quantity});
+      // ✅ Populate Product Image (Pic → Files)
+      {
+        $lookup: {
+          from: "files", // collection name
+          localField: "productDetail.pic",
+          foreignField: "_id",
+          as: "productDetail.pic"
+        }
+      },
+      {
+        $unwind: {
+          path: "$productDetail.pic",
+          preserveNullAndEmptyArrays: true
+        }
+      },
 
-        await sendNodification({
-            emailTo:user.email,
-            subject:"Order Placed Successfully",
-            head:"Your order is confirmed and order placed successfully",
-            body:"Will we update status of the order on our platform. Thank you"
-        })
+      // ✅ Filter Search
+      {
+        $match: search
+          ? {
+            ...matchStage,
+            $or: [
+              { status: search },
+              { "createdBy.name": search },
+              { "createdBy.phone": search }
+            ]
+          }
+          : matchStage
+      },
 
-        res.status(200).json({code:200,status:true,message:"Order placed"});
+      { $sort: { orderDate: -1 } },
+
+      { $skip: (pageNumber - 1) * sizeNumber },
+
+      { $limit: sizeNumber }
+    ];
+
+    const orders = await ConfirmedOrder.aggregate(pipeline);
+
+    res.status(200).json({
+      code: 200,
+      status: true,
+      data: { orders }
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+const placeOrder = async (req, res, next) => {
+  try {
+    const { _id } = req.user;
+    const { id } = req.params;
+    const { quantity } = req.body;
+
+    const user = await User.findById(_id).select("-forgotPasswordCode -verificationCode");
+    const isProductExists = await Product.findById(id).select("-ratings -numReview -reviews");
+
+    if (!isProductExists) {
+      res.code = 400;
+      throw new Error("Product doesn't exists");
     }
-    catch(error)
-    {
-        next(error);
+
+    if (isProductExists.quantity == 0) {
+      res.code = 400;
+      throw new Error("Product is not available");
     }
+
+    if (user.isVerified == false) {
+      res.code = 401;
+      throw new Error("User not verified");
+    }
+
+
+    await Notification.create({
+      title: "New Order Placed",
+      message: `Order placed by ${req.user?.name || "Customer"}`,
+      type: "order",
+    });
+
+    await ConfirmedOrder.insertOne({ createdBy: user._id, productDetail: isProductExists._id, orderQuantity: quantity });
+
+    await sendNodification({
+      emailTo: user.email,
+      subject: "Order Placed Successfully",
+      head: "Your order is confirmed and order placed successfully",
+      body: "Will we update status of the order on our platform. Thank you"
+    })
+
+    res.status(200).json({ code: 200, status: true, message: "Order placed" });
+  }
+  catch (error) {
+    next(error);
+  }
 }
 
 const myOrders = async (req, res, next) => {
@@ -130,7 +234,7 @@ const myOrders = async (req, res, next) => {
             brand: order.productDetail?.brand,
             ratings: order.productDetail?.ratings,
             numReview: order.productDetail?.numReview,
-            pic: fileName, 
+            pic: fileName,
             reviews: order.productDetail?.reviews
           }
         }
@@ -150,99 +254,90 @@ const myOrders = async (req, res, next) => {
 }
 
 
-const cancelOrder=async (req,res,next)=>{
-    try{
-    const {id}=req.params;
-    const {_id}=req.user;
+const cancelOrder = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { _id } = req.user;
 
-    const order=await ConfirmedOrder.findById(id).populate("productDetail").populate("createdBy");
-    if(!order)
-    {
-        res.code=400;
-        throw new Error("Order not exists");
+    const order = await ConfirmedOrder.findById(id).populate("productDetail").populate("createdBy");
+    if (!order) {
+      res.code = 400;
+      throw new Error("Order not exists");
     }
 
-    const user=await User.findById(_id).select("-password -forgotPasswordCode -verificationCode");
+    const user = await User.findById(_id).select("-password -forgotPasswordCode -verificationCode");
 
-    if(!user)
-    {
-        res.code=404;
-        throw new Error("User not found");
+    if (!user) {
+      res.code = 404;
+      throw new Error("User not found");
     }
 
-    const emailto=user.email;
-    const productDetail=`The product ${order.productDetail.productName} placed by the user ${order.createdBy.email} is now cancelled`
+    const emailto = user.email;
+    const productDetail = `The product ${order.productDetail.productName} placed by the user ${order.createdBy.email} is now cancelled`
 
-    if(emailto)
-    {
-          await sendNodification({
-            emailTo:emailto,
-            subject:"Order Cancel",
-            head:productDetail,
-            body:"Thank you"
-        })      
+    if (emailto) {
+      await sendNodification({
+        emailTo: emailto,
+        subject: "Order Cancel",
+        head: productDetail,
+        body: "Thank you"
+      })
     }
 
-    order.status="Order cancelled";
+    order.status = "Order cancelled";
     await order.save();
 
-    res.status(200).json({code:200,status:true,message:"Order Cancelled"});
-    }
-    catch(error)
-    {
-        next(error);
-    }
+    res.status(200).json({ code: 200, status: true, message: "Order Cancelled" });
+  }
+  catch (error) {
+    next(error);
+  }
 
 }
 
-const deleteOrder=async (req,res,next)=>{
-    try{
-        const {id}=req.params;
-        const order=await ConfirmedOrder.findById(id);
+const deleteOrder = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const order = await ConfirmedOrder.findById(id);
 
-        if(!order)
-        {
-            res.code=400;
-            throw new Error("No orders placed");
-        }
-
-        if(order.status!="Order cancelled")
-        {
-            res.code=400;
-            throw new Error("Order not cancelled");
-        }
-
-        await ConfirmedOrder.findByIdAndDelete(id);
-
-        res.status(200).json({code:200,status:true,message:"Order deleted"});
+    if (!order) {
+      res.code = 400;
+      throw new Error("No orders placed");
     }
-    catch(error)
-    {
-        next(error);
+
+    if (order.status != "Order cancelled") {
+      res.code = 400;
+      throw new Error("Order not cancelled");
     }
+
+    await ConfirmedOrder.findByIdAndDelete(id);
+
+    res.status(200).json({ code: 200, status: true, message: "Order deleted" });
+  }
+  catch (error) {
+    next(error);
+  }
 }
 
-const changeStatus=async (req,res,next)=>{
-    try{
-        const {id}=req.params;
-        const {status}=req.body;
-        const order=await ConfirmedOrder.findById(id);
+const changeStatus = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const order = await ConfirmedOrder.findById(id);
 
-        if(!order)
-        {
-            res.code=400;
-            throw new Error("Order is not exist");
-        }
-
-        order.status=status ? status :order.status;
-        await order.save();
-
-        res.status(200).json({code:200,status:true,message:"Status updated successfully"});
+    if (!order) {
+      res.code = 400;
+      throw new Error("Order is not exist");
     }
-    catch(error)
-    {
-        next(error);
-    }
+
+    order.status = status ? status : order.status;
+    await order.save();
+
+    res.status(200).json({ code: 200, status: true, message: "Status updated successfully" });
+  }
+  catch (error) {
+    next(error);
+  }
 }
 
-module.exports={getAllOrders,placeOrder,myOrders,cancelOrder,deleteOrder,changeStatus};
+module.exports = { getAllOrders, placeOrder, myOrders, cancelOrder, deleteOrder, changeStatus };

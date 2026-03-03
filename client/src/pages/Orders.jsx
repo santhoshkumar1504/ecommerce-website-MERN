@@ -14,6 +14,7 @@ const Orders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
+        setLoading(true)
         const res = await axios.get(
           "http://localhost:5000/api/v1/orders/user",
           { withCredentials: true }
@@ -37,7 +38,11 @@ const Orders = () => {
     navigate('/')
   }
 
-  if (loading) return <h3>Loading orders...</h3>
+  if (loading) return <div className="d-flex justify-content-center align-content-center">
+  <div className="spinner-border text-warning mt-5" role="status">
+    <span className="visually-hidden">Loading...</span>
+  </div>
+</div>
 
   if (!isAuthenticated) {
     return (

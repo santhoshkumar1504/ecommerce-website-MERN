@@ -1,5 +1,4 @@
 import '../../assets/styles/product.css';
-import image1 from '../../assets/photos/watch.jpg';
 import { GrFavorite } from "react-icons/gr";
 import { CiStar } from "react-icons/ci";
 

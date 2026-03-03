@@ -5,6 +5,7 @@ import { CiStar } from "react-icons/ci";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { Link } from 'react-router-dom';
 
 const Product = ({ data }) => {
   const [likedProducts, setLikedProducts] = useState([]);
@@ -63,9 +64,9 @@ const Product = ({ data }) => {
       toast.error("Failed to remove product");
     }
   };
-
   return (
     <div className="products">
+      <Link to={`products/${data._id}`} className='text-decoration-none'>
       <img
         src={`http://localhost:5000/images/${data.pic.fileName}`}
         alt={data.productName}
@@ -83,10 +84,10 @@ const Product = ({ data }) => {
           <CiStar className="star" /> {data.ratings} | {data.numReview} reviews
         </div>
 
-        <div className="my-2 d-flex">
+        <div className="my-2 d-flex btn-group-custom">
           {isLiked ? (
             <button
-              className="btn btn-danger mx-1"
+              className="btn btn-danger mx-1 like-btn"
               onClick={removeFromLiked}
               title="Remove from liked"
             >
@@ -94,7 +95,7 @@ const Product = ({ data }) => {
             </button>
           ) : (
             <button
-              className="btn btn-danger mx-1"
+              className="btn btn-danger mx-1 like-btn"
               onClick={addToLiked}
               title="Add to liked"
             >
@@ -107,6 +108,7 @@ const Product = ({ data }) => {
           </button>
         </div>
       </div>
+      </Link>
     </div>
   );
 };

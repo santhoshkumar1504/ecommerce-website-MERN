@@ -76,10 +76,10 @@ const Register = () => {
             <input type="email" name="email" id="email" className='form-control' placeholder='Enter your email' pattern='[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$' required title="Enter a valid email address" onChange={handleChange}/>
     
             <label htmlFor="password" className='form-label mt-2'>Password</label>
-                    <div class="input-group">
+                    <div className="input-group">
                     <input type={pass ? "password" : "text"} name="password" id="password" className='form-control' placeholder='Enter your password' required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}"  onChange={handleChange}  title="Must contain at least 8 characters, including 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character (!@#$%^&*)" />
-                      {pass && <span class="input-group-text" id="basic-addon2" onClick={changeTypeText}><AiOutlineEye /></span>}
-                      {!pass && <span class="input-group-text" id="basic-addon2" onClick={changeTypeText}><AiOutlineEyeInvisible /></span>}
+                      {pass && <span className="input-group-text" id="basic-addon2" onClick={changeTypeText}><AiOutlineEye /></span>}
+                      {!pass && <span className="input-group-text" id="basic-addon2" onClick={changeTypeText}><AiOutlineEyeInvisible /></span>}
                       </div>
 
             <label htmlFor="phone" className='form-label mt-2'>Phone</label>

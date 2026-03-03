@@ -7,9 +7,11 @@ dotenv.config();
 
 const dbConnect = require('./init/mongodb');
 const {port}=require('./config/keys');
-const { authRoute, userRoute, categoryRoute, orderRoute, productRoute, reviewRoute, productDetailRoute, checkoutRoute, likeRoute } = require('./routes');
+const { authRoute, userRoute, categoryRoute, orderRoute, productRoute, reviewRoute, productDetailRoute, checkoutRoute, likeRoute, aiDescriptionRoute, paymentRoute } = require('./routes');
 const errorHandler = require('./middlewares/errorHandler');
 const cookieParser = require('cookie-parser');
+const notificationRoute = require("./routes/notificationRoute");
+
 
 // Database Connection
 dbConnect();
@@ -29,8 +31,11 @@ app.use(cookieParser());
 
 // for image
 app.use('/images',express.static(path.join(__dirname,"uploads")));
+// for qr
+app.use("/uploads", express.static("uploads"));
 
 // routes
+app.use("/api/v1/notifications", notificationRoute);
 app.use('/api/v1/auth',authRoute);
 app.use('/api/v1/users',userRoute);
 app.use('/api/v1/categorys',categoryRoute);
@@ -44,6 +49,10 @@ app.use('/api/v1/product-detail',productDetailRoute);
 // checkouts and liked products
 app.use('/api/v1/checkouts',checkoutRoute);
 app.use('/api/v1/liked',likeRoute);
+app.use("/api/v1/payment", paymentRoute);
+
+// ai 
+app.use('/api/v1/ai',aiDescriptionRoute)
 
 app.listen(port,()=>{
     console.log("Server is running on "+port);

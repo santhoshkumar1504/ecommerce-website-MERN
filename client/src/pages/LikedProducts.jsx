@@ -57,7 +57,11 @@ const LikedProducts = () => {
     fetchLikedProducts()
   }, [])
 
-  if (loading) return <h3>Loading liked products...</h3>
+  if (loading) return <div className="d-flex justify-content-center align-content-center">
+  <div className="spinner-border text-warning mt-5" role="status">
+    <span className="visually-hidden">Loading...</span>
+  </div>
+</div>
 
   if (!isAuthenticated) {
     return (
@@ -102,7 +106,7 @@ const LikedProducts = () => {
 
                 <div className="d-flex justify-content-center gap-2">
                   <button
-                    className="btn btn-danger"
+                    className="btn btn-danger like-btn"
                     onClick={() => disLike(item.productId._id)}
                   >
                     <IoIosHeartDislike />

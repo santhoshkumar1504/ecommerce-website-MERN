@@ -4,16 +4,15 @@ import Banner from "../components/common/Banner";
 import Footer from "../components/common/Footer";
 import Navbar from "../components/common/HeadNavbar";
 import Liked from "../components/product/Liked";
-import Productcontainer from "../components/product/ProductContainer";
 import axios from "axios";
 import CategorySection from "../components/product/CategorySection";
+import Productcontainer from "../components/product/Productcontainer";
 
 
 const Home = () => {
    const [likedProducts, setLikedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState([]);
-
 useEffect(() => {
     axios
       .get("http://localhost:5000/api/v1/categorys")
@@ -47,13 +46,13 @@ useEffect(() => {
   return (
       <>
       <About/>
-       {likedProducts.length > 0 && (
+       {/* {likedProducts.length > 0 && (
         <>
           <h3 className="mt-3 mb-1 about-title">Recommended For You</h3>
           <hr className="hrline mb-3" />
           <Liked products={likedProducts} />
         </>
-      )}
+      )} */}
       {categories.length>0 && <div><h3 className="mt-3 mb-1 about-title">Featured Products</h3>
       <hr className='hrline mb-3'/>
       <Productcontainer  detail="isFeatured=true"/>

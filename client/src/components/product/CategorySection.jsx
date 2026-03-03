@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Productcontainer from "./ProductContainer";
+import Productcontainer from "./Productcontainer";
 
 const CategorySection = ({ title }) => {
   const [hasProducts, setHasProducts] = useState(false);
-
   useEffect(() => {
     axios
       .get(`http://localhost:5000/api/v1/products?category=${title}`)

@@ -1,4 +1,4 @@
-const {PORT,MONGO_URI,JWT_SECRET_KEY,SEND_EMAIL,EMAIL_SECRET,NODE_ENV}=process.env;
+const {PORT,MONGO_URI,JWT_SECRET_KEY,SEND_EMAIL,EMAIL_SECRET,NODE_ENV,GROQ_API_KEY}=process.env;
 
 module.exports={
     port:PORT,
@@ -6,5 +6,6 @@ module.exports={
     jwtSecret:JWT_SECRET_KEY,
     senderEmail:SEND_EMAIL,
     emailPass:EMAIL_SECRET,
-    node_env:NODE_ENV
+    node_env:NODE_ENV,
+    GROQ_API_KEY:GROQ_API_KEY
 }

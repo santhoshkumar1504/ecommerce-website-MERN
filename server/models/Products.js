@@ -1,4 +1,5 @@
 const mongoose=require('mongoose');
+const { v4: uuidv4 } = require("uuid");
 
 const productSchema=new mongoose.Schema({
     productName:{
@@ -78,10 +79,37 @@ const productSchema=new mongoose.Schema({
         type:mongoose.Types.ObjectId,
         ref:"users"
     },
-    // qrCode:{
-    //     type:String
-    // }
+  uuid: {
+  type: String,
+  unique: true,
+  sparse: true
+},
+
+qrCode: {
+  type: String,
+  default: null
+},
 },{timestamps:true})
+
+productSchema.pre("save", function () {
+
+  if (!this.uuid) {
+    this.uuid = uuidv4();
+  }
+
+});
+
+productSchema.index({
+  productName: "text",
+  productDesc: "text",
+  brand: "text"
+});
+
+productSchema.index({ category: 1 });
+productSchema.index({ brand: 1 });
+productSchema.index({ price: 1 });
+productSchema.index({ ratings: -1 });
+productSchema.index({ createdAt: -1 });
 
 //uuid for qrcode
 
