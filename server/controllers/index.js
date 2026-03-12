@@ -10,5 +10,6 @@ const productDetailController=require('./productDetails');
 
 const checkOutController=require('./checkout');
 const likedproductController=require('./likedproduct');
+const paymentController=require('./paymentController')
 
-module.exports={authController,userController,categoryController,orderController,fileController,productController,reviewController,productDetailController,checkOutController,likedproductController}
+module.exports={paymentController,authController,userController,categoryController,orderController,fileController,productController,reviewController,productDetailController,checkOutController,likedproductController}

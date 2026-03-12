@@ -215,6 +215,11 @@ const addAdmin=async(req,res,next)=>{
             throw new Error("User is already admin");
         }
 
+        if(user.role==2)
+        {
+            res.code=400;
+            throw new Error("Only the Super Admin can change the role");
+        }
         user.role=role ? role :user.role;
         await user.save();
 

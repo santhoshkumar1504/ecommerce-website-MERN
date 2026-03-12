@@ -212,7 +212,7 @@ const AllProducts = () => {
     };
 
     //  QR download function
-    const handleDownloadQR = async (qrPath, productName) => {
+    const handleDownloadQR = async (qrPath, productName, uuid) => {
         try {
             const response = await axios.get(
                 `http://localhost:5000/${qrPath}`,
@@ -222,7 +222,7 @@ const AllProducts = () => {
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement("a");
             link.href = url;
-            link.setAttribute("download", `${productName}-QR.png`);
+            link.setAttribute("download", `${productName}-${uuid}-QR.png`);
             document.body.appendChild(link);
             link.click();
             link.remove();
@@ -362,7 +362,7 @@ const AllProducts = () => {
                                                         src={`http://localhost:5000/${items.qrCode}`}
                                                         alt="QR"
                                                         style={{ width: "80px", cursor: "pointer" }}
-                                                        onClick={() => handleDownloadQR(items.qrCode, items.productName)}
+                                                        onClick={() => handleDownloadQR(items.qrCode, items.productName, items.uuid)}
                                                     />
                                                 )}
                                             </td>

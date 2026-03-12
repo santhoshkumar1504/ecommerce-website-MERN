@@ -8,13 +8,29 @@ import { toast } from "react-toastify"
 import { IoArrowBackCircleSharp } from "react-icons/io5";
 
 const LikedProducts = () => {
-    const navigate=useNavigate();
+  const navigate = useNavigate();
   const [products, setProducts] = useState([])
   const [isAuthenticated, setIsAuthenticated] = useState(true)
   const [loading, setLoading] = useState(true)
 
-      const hangleClick=()=>{
+  const hangleClick = () => {
     navigate('/')
+  }
+
+  const addToCart = async (productId) => {
+    try {   
+      await axios.post(`http://localhost:5000/api/v1/checkouts/addCheckout/${productId}`,{quantity:1}, { withCredentials: true })
+
+      toast.success("Added to cart 🛒")
+    }
+    catch (error) {
+      if (error.response?.status === 401) {
+        toast.error("Please login first");
+        navigate("/login");
+      } else {
+        toast.error(error.response?.data?.message || "Failed to add to cart");
+      }
+    }
   }
 
   const disLike = async (productId) => {
@@ -58,10 +74,10 @@ const LikedProducts = () => {
   }, [])
 
   if (loading) return <div className="d-flex justify-content-center align-content-center">
-  <div className="spinner-border text-warning mt-5" role="status">
-    <span className="visually-hidden">Loading...</span>
+    <div className="spinner-border text-warning mt-5" role="status">
+      <span className="visually-hidden">Loading...</span>
+    </div>
   </div>
-</div>
 
   if (!isAuthenticated) {
     return (
@@ -74,7 +90,7 @@ const LikedProducts = () => {
 
   return (
     <div className="liked-container">
-      <div className="p-3"><button className="btn py-2 px-3 btn-primary" onClick={hangleClick}><IoArrowBackCircleSharp className="me-1"/>Back</button></div>
+      <div className="p-3"><button className="btn py-2 px-3 btn-primary" onClick={hangleClick}><IoArrowBackCircleSharp className="me-1" />Back</button></div>
       <h2 className="mt-3 mb-1 about-title">Your Liked Products</h2>
       <hr className="hrline mb-4" />
 
@@ -87,6 +103,8 @@ const LikedProducts = () => {
 
             return (
               <div key={item._id} className="product-box">
+                <Link to={`/products/${item.productId._id}`}
+        className="text-decoration-none product-link-area" >
                 <img
                   src={`http://localhost:5000/images/${item.pics}`}
                   alt={product?.productName}
@@ -103,6 +121,7 @@ const LikedProducts = () => {
                 <p>
                   ⭐ {product?.ratings} ({product?.numReview} reviews)
                 </p>
+                </Link>
 
                 <div className="d-flex justify-content-center gap-2">
                   <button
@@ -112,7 +131,7 @@ const LikedProducts = () => {
                     <IoIosHeartDislike />
                   </button>
 
-                  <button className="btn btn-primary">
+                  <button className="btn btn-primary" onClick={() => addToCart(item.productId._id)}>
                     Add to cart
                   </button>
                 </div>

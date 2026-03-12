@@ -127,6 +127,7 @@ const [uuidSearch, setUuidSearch] = useState("");
               <th>Product</th>
               <th>Customer</th>
               <th>Mobile</th>
+              <th>Address</th>
               <th>Price</th>
               <th>Qty</th>
               <th>Total</th>
@@ -174,6 +175,7 @@ const [uuidSearch, setUuidSearch] = useState("");
           <td>{order?.productDetail?.productName}</td>
           <td>{order?.createdBy?.name || "Guest"}</td>
           <td>{order?.createdBy?.phone || "N/A"}</td>
+          <td>{order?.address||"N/A"}</td>
           <td>₹{price}</td>
           <td>{quantity}</td>
           <td>₹{price * quantity}</td>

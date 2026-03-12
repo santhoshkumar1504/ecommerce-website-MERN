@@ -1,9 +1,10 @@
 const express = require("express");
-const router = express.Router();
-const { createOrder, verifyPayment } = require("../controllers/paymentController");
 const isAuth = require("../middlewares/isAuth");
+const { paymentController } = require("../controllers");
+const router = express.Router();
 
-router.post("/create-order", isAuth, createOrder);
-router.post("/verify", isAuth, verifyPayment);
+
+router.post("/create-order/:productId",isAuth,paymentController.createRazorpayOrder);
+router.post("/verify-payment", isAuth, paymentController.verifyPayment);
 
 module.exports = router;

@@ -428,6 +428,209 @@ const AdminLayout = () => {
   background: #dbeafe;
   color: #1e40af;
 }
+  .dashboard-container {
+  padding: 30px;
+  background: #f4f6f9;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.dashboard-title {
+  font-weight: 700;
+  margin-bottom: 25px;
+  font-size: 28px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.stat-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  transition: 0.3s;
+  min-width: 0;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+
+.revenue-card {
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: white;
+}
+
+.charts-grid {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.chart-card {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  padding: 22px;
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.05);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.recent-orders {
+  margin-top: 40px;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  overflow-x: auto;
+}
+
+.recent-orders table {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+}
+
+.recent-orders th,
+.recent-orders td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  white-space: nowrap;
+}
+
+.status {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+.status.pending {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.status.delivered {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status.shipped {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+/* ---------- Tablet ---------- */
+@media (max-width: 992px) {
+  .dashboard-container {
+    padding: 20px;
+  }
+
+  .dashboard-title {
+    font-size: 24px;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-card {
+    padding: 18px;
+  }
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 15px;
+  }
+
+  .dashboard-title {
+    font-size: 22px;
+    margin-bottom: 18px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-top: 25px;
+  }
+
+  .chart-card {
+    padding: 15px;
+    border-radius: 14px;
+  }
+
+  .stat-card {
+    padding: 16px;
+  }
+
+  .stat-card h4 {
+    font-size: 16px;
+  }
+
+  .stat-card h2 {
+    font-size: 22px;
+  }
+
+  .recent-orders {
+    padding: 15px;
+    margin-top: 25px;
+  }
+
+  .recent-orders h4 {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+}
+
+/* ---------- Small Mobile ---------- */
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding: 12px;
+  }
+
+  .dashboard-title {
+    font-size: 20px;
+  }
+
+  .chart-card {
+    padding: 12px;
+  }
+
+  .stat-card {
+    padding: 14px;
+  }
+
+  .stat-card h4 {
+    font-size: 14px;
+  }
+
+  .stat-card h2 {
+    font-size: 20px;
+  }
+
+  .recent-orders th,
+  .recent-orders td {
+    padding: 10px;
+    font-size: 13px;
+  }
+}
   `
         }
       </style>

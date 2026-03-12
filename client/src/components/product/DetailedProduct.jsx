@@ -33,6 +33,8 @@ const DetailedProduct = () => {
     if (id) fetchProduct();
   }, [id]);
 
+  // Buying the product
+
   // Add To Cart
   const handleAddToCart = async () => {
     try {
@@ -165,7 +167,7 @@ const DetailedProduct = () => {
             {/* BUTTONS */}
             <div className="btn-group-custom">
               <button
-                className="cart-btn"
+                className="cart-btn p-3 px-4 fs-6"
                 onClick={handleAddToCart}
                 disabled={product.quantity === 0 || adding}
               >
@@ -294,21 +296,6 @@ const DetailedProduct = () => {
       .btn-group-custom {
         display: flex;
         gap: 20px;
-      }
-
-      .cart-btn {
-        background: black;
-        color: white;
-        padding: 12px 30px;
-        border: none;
-        border-radius: 30px;
-        transition: 0.3s;
-      }
-
-      .cart-btn:hover {
-        background: #333;
-        transform: translateY(-4px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
       }
 
       .buy-btn {

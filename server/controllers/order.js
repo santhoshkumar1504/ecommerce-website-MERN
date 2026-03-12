@@ -259,41 +259,72 @@ const cancelOrder = async (req, res, next) => {
     const { id } = req.params;
     const { _id } = req.user;
 
-    const order = await ConfirmedOrder.findById(id).populate("productDetail").populate("createdBy");
+    const order = await ConfirmedOrder.findById(id)
+      .populate("productDetail")
+      .populate("createdBy");
+
     if (!order) {
-      res.code = 400;
-      throw new Error("Order not exists");
+      return res.status(404).json({
+        code: 404,
+        status: false,
+        message: "Order not exists",
+      });
     }
 
-    const user = await User.findById(_id).select("-password -forgotPasswordCode -verificationCode");
-
-    if (!user) {
-      res.code = 404;
-      throw new Error("User not found");
+    if (!order.createdBy) {
+      return res.status(400).json({
+        code: 400,
+        status: false,
+        message: "Order user not found",
+      });
     }
 
-    const emailto = user.email;
-    const productDetail = `The product ${order.productDetail.productName} placed by the user ${order.createdBy.email} is now cancelled`
-
-    if (emailto) {
-      await sendNodification({
-        emailTo: emailto,
-        subject: "Order Cancel",
-        head: productDetail,
-        body: "Thank you"
-      })
+    if (String(order.createdBy._id) !== String(_id)) {
+      return res.status(403).json({
+        code: 403,
+        status: false,
+        message: "You are not allowed to cancel this order",
+      });
     }
 
-    order.status = "Order cancelled";
-    await order.save();
+    if (order.status === "Order cancelled") {
+      return res.status(200).json({
+        code: 200,
+        status: true,
+        message: "Order already cancelled",
+      });
+    }
 
-    res.status(200).json({ code: 200, status: true, message: "Order Cancelled" });
+    await ConfirmedOrder.findByIdAndUpdate(
+      id,
+      { status: "Order cancelled" },
+      { new: true }
+    );
+
+    if (typeof Notification !== "undefined") {
+      await Notification.create({
+        title: "Order Cancelled",
+        message: `${order.createdBy?.name || "Customer"} cancelled the order for ${
+          order.productDetail?.productName || "product"
+        }`,
+        type: "order",
+      });
+    }
+
+    return res.status(200).json({
+      code: 200,
+      status: true,
+      message: "Order Cancelled",
+    });
+  } catch (error) {
+    console.log("cancelOrder error:", error);
+    return res.status(500).json({
+      code: 500,
+      status: false,
+      message: error.message || "Failed to cancel order",
+    });
   }
-  catch (error) {
-    next(error);
-  }
-
-}
+};
 
 const deleteOrder = async (req, res, next) => {
   try {

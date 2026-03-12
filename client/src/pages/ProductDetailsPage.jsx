@@ -7,6 +7,7 @@ import DetailedProduct from "../components/product/DetailedProduct";
 import ProductCarousel from "../components/product/ProductCarousel";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import TrustBadges from "../components/product/TrustBadges";
 
 const ProductDetailsPage = () => {
   // fetch data
@@ -75,6 +76,7 @@ const navigate = useNavigate();
       <HeadNavbar />
       <DetailedProduct data={product} />
       <ProductCarousel products={allProducts} />
+      <TrustBadges/>
       <Footer />
     </div>
   )
