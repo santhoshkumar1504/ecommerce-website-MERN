@@ -1,7 +1,7 @@
 .cb-float-btn {
   position: fixed;
   bottom: 24px;
-  left: 24px;
+  right: 24px;
   width: 58px;
   height: 58px;
   border-radius: 50%;
@@ -17,7 +17,7 @@
 .cb-wrapper {
   position: fixed;
   bottom: 95px;
-  left: 24px;
+  right: 24px;
   width: 360px;
   max-height: 78vh;
   background: #fff;
@@ -186,4 +186,31 @@
   border-radius: 999px;
   padding: 6px 10px;
   font-size: 12px;
+}
+
+
+.cb-product-card {
+  display: flex;
+  gap: 10px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.cb-product-card:hover {
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  transition: 0.2s;
+}
+
+.cb-view-btn {
+  margin-top: 8px;
+  border: none;
+  background: #111827;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
 }

@@ -46,7 +46,7 @@ const VoiceAssistant = () => {
 const wrapperStyle = {
   position: "fixed",
   bottom: "30px",
-  right: "30px",
+  left: "30px",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
