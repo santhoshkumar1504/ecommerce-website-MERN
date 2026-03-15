@@ -11,7 +11,7 @@ const { authRoute, userRoute, categoryRoute, orderRoute, productRoute, reviewRou
 const errorHandler = require('./middlewares/errorHandler');
 const cookieParser = require('cookie-parser');
 const notificationRoute = require("./routes/notificationRoute");
-
+const chatbotRoutes = require("./chatbot/routes/chatbotRoutes");
 
 // Database Connection
 dbConnect();
@@ -50,6 +50,9 @@ app.use('/api/v1/product-detail',productDetailRoute);
 app.use('/api/v1/checkouts',checkoutRoute);
 app.use('/api/v1/liked',likeRoute);
 app.use("/api/v1/payment", paymentRoute);
+
+// Chatbot Route
+app.use("/api/chatbot",chatbotRoutes);
 
 // ai 
 app.use('/api/v1/ai',aiDescriptionRoute)

@@ -5,6 +5,7 @@ import VoiceAssistant from "./voice/VoiceAssistant";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { CartProvider } from "./context/CartContext";
+import Chatbot from "./chatbot/Chatbot";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <ToastContainer position="top-right" autoClose={3000} />
         <Allroutes />
         <VoiceAssistant />
+        <Chatbot/>
       </CartProvider>
     </>
   )
