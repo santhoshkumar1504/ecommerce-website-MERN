@@ -6,6 +6,7 @@ import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { MdDelete, MdCancel, MdLocationOn } from "react-icons/md";
 import { FaBoxOpen } from "react-icons/fa";
 import { toast } from "react-toastify";
+import ReviewSection from "../components/product/ReviewSection";
 
 const Orders = () => {
   const [products, setProducts] = useState([]);
@@ -14,6 +15,7 @@ const Orders = () => {
   const [cancellingId, setCancellingId] = useState("");
   const [deletingId, setDeletingId] = useState("");
   const navigate = useNavigate();
+  
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -182,6 +184,8 @@ const Orders = () => {
                       <MdLocationOn size={18} />
                       <span>{item?.address || "No address available"}</span>
                     </div>
+
+                    <ReviewSection product={product}/>
 
                     <div className="actions-row">
                       <button

@@ -4,6 +4,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { useCart } from "../../context/CartContext";
 import { toast } from "react-toastify";
+import remarkGfm from "remark-gfm";
+import ProductReviews from "./ProductReviews";
+
 
 const DetailedProduct = () => {
   const { id } = useParams();
@@ -75,72 +78,85 @@ const DetailedProduct = () => {
 
   const discountPercent = product.price
     ? Math.round(
-        ((product.price - product.discountedPrice) / product.price) * 100
-      )
+      ((product.price - product.discountedPrice) / product.price) * 100
+    )
     : 0;
 
   return (
-    <div className="detailed-page py-5 fade-in">
+    <div className="detailed-page py-5">
       <div className="container">
-        <div className="product-card row align-items-center">
 
-          {/* IMAGE */}
-          <div className="col-md-6">
-            <div className="image-wrapper">
+        {/* TOP SECTION */}
+        <div className="row product-top">
+
+          {/* LEFT IMAGE */}
+          <div className="col-md-5">
+            <div className="image-box">
+
               {discountPercent > 0 && (
-                <div className="discount-badge">
+                <span className="discount-badge">
                   {discountPercent}% OFF
-                </div>
+                </span>
               )}
+
               <img
                 src={imageUrl}
                 alt={product.productName}
-                className="img-fluid main-img"
+                className="product-img1"
               />
+
             </div>
           </div>
 
-          {/* DETAILS */}
-          <div className="col-md-6">
-            <h2 className="product-title">{product.productName}</h2>
 
-            <p className="meta-text">
-              Brand: {product.brand}  |  Category: {product.category?.title}
+          {/* RIGHT DETAILS */}
+          <div className="col-md-7 ps-5">
+
+            <h2 className="title">
+              {product.productName}
+            </h2>
+
+            <p className="meta fw-semibold fs-4">
+              Brand: {product.brand} <br />
+            </p>
+            <p className="fs-5">
+              Category: {product.category?.title}
             </p>
 
+
             {/* PRICE */}
-            <div className="price-section">
-              <span className="discount-price">
-                ₹ {product.discountedPrice}
+            <div className="price-box">
+
+              <span className="discount">
+                ₹{product.discountedPrice}.00
               </span>
 
               {product.discountedPrice < product.price && (
-                <span className="original-price">
-                  ₹{product.price}
+                <span className="original ms-2">
+                  ₹{product.price}.00
                 </span>
               )}
+
             </div>
+
 
             {/* STOCK */}
             <p>
               {product.quantity > 0 ? (
-                <span className="in-stock">
+                <span className="stock fs-6">
                   In Stock ({product.quantity})
                 </span>
               ) : (
-                <span className="out-stock">Out of Stock</span>
+                <span className="out fs-6 fw-bold">
+                  Out of stock
+                </span>
               )}
             </p>
 
-            {/* DESCRIPTION */}
-            <div className="ai-description">
-              <ReactMarkdown>
-                {product.productDesc}
-              </ReactMarkdown>
-            </div>
 
             {/* QUANTITY */}
-            <div className="quantity-box">
+            <div className="qty-box">
+
               <button
                 onClick={() =>
                   setQuantity(quantity > 1 ? quantity - 1 : 1)
@@ -149,7 +165,7 @@ const DetailedProduct = () => {
                 -
               </button>
 
-              <strong>{quantity}</strong>
+              <span>{quantity}</span>
 
               <button
                 onClick={() =>
@@ -162,165 +178,387 @@ const DetailedProduct = () => {
               >
                 +
               </button>
+
             </div>
 
+
             {/* BUTTONS */}
-            <div className="btn-group-custom">
+            <div className="btns">
+
               <button
-                className="cart-btn p-3 px-4 fs-6"
+                className="add-btn"
                 onClick={handleAddToCart}
-                disabled={product.quantity === 0 || adding}
               >
-                {adding ? "Adding..." : "Add To Cart"}
+                Add to Cart
               </button>
 
               <button
                 className="buy-btn"
                 onClick={() => navigate("/cart")}
               >
-                Go To Cart
+                Buy Now
               </button>
+
             </div>
 
+            <ProductReviews product={product} />
+
           </div>
+
         </div>
+
+
+        {/* FULL WIDTH DESCRIPTION */}
+        <div className="desc-box">
+
+          <h4>Product Description</h4>
+
+          <div className="product-markdown">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                h2: ({ node, ...props }) => <h2 className="pm-h2" {...props} />,
+                h3: ({ node, ...props }) => <h3 className="pm-h3" {...props} />,
+                p: ({ node, ...props }) => <p className="pm-p" {...props} />,
+                ul: ({ node, ...props }) => <ul className="pm-ul" {...props} />,
+                li: ({ node, ...props }) => <li className="pm-li" {...props} />,
+                table: ({ node, ...props }) => (
+                  <div className="pm-table-wrap">
+                    <table className="pm-table" {...props} />
+                  </div>
+                ),
+                thead: ({ node, ...props }) => <thead className="pm-thead" {...props} />,
+                th: ({ node, ...props }) => <th className="pm-th" {...props} />,
+                td: ({ node, ...props }) => <td className="pm-td" {...props} />,
+                strong: ({ node, ...props }) => <strong className="pm-strong" {...props} />,
+              }}
+            >
+              {product.productDesc}
+            </ReactMarkdown>
+          </div>
+
+        </div>
+
       </div>
 
-      {/* YOUR CUSTOM CSS */}
+
+
       <style>{`
 
-      .detailed-page {
-        background: linear-gradient(to right, #f8f9fa, #eef1f5);
-        min-height: 100vh;
-      }
+.detailed-page {
+  background: #f1f3f6;
+}
 
-      .product-card {
-        background: rgba(255, 255, 255, 0.6);
-        backdrop-filter: blur(15px);
-        border-radius: 20px;
-        padding: 45px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-      }
+/* TOP */
+.image-box {
+  position: relative;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  min-height:50vh;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
 
-      .image-wrapper {
-        position: relative;
-        overflow: hidden;
-        border-radius: 20px;
-      }
+.product-img1 {
+  max-width: 100%;
+  min-height: 50vh;
+  object-fit: contain;
+  transition: 0.3s;
+}
 
-      .main-img {
-        transition: transform 0.5s ease;
-      }
+.product-img:hover {
+  transform: scale(1.05);
+}
 
-      .main-img:hover {
-        transform: scale(1.12);
-      }
+.discount-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #ff3f6c;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 20px;
+  z-index:2;
+  font-size: 13px;
+  font-weight: 600;
+}
 
-      .discount-badge {
-        position: absolute;
-        top: 15px;
-        left: 15px;
-        background: linear-gradient(45deg, red, darkred);
-        color: white;
-        padding: 8px 14px;
-        border-radius: 50px;
-        font-weight: bold;
-        font-size: 14px;
-      }
+.product-top {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+}
 
-      .product-title {
-        font-weight: 700;
-        margin-bottom: 10px;
-      }
+/* IMAGE */
 
-      .meta-text {
-        color: #666;
-      }
+/* TEXT */
 
-      .price-section {
-        margin: 20px 0;
-      }
+.title {
+  font-weight: 900;
+  margin-top:40px;
+  margin-bottom:25px;
+}
 
-      .discount-price {
-        color: #e63946;
-        font-size: 28px;
-      }
+.meta {
+  color: gray;
+  font-size:18px;
+}
 
-      .original-price {
-        margin-left: 15px;
-        text-decoration: line-through;
-        color: #888;
-      }
+.price-box {
+  margin: 10px 0;
+}
 
-      .in-stock {
-        color: green;
-        font-weight: 600;
-      }
+.discount {
+  font-size: 28px;
+  color: red;
+  font-weight: 700;
+}
 
-      .out-stock {
-        color: red;
-        font-weight: 600;
-      }
+.original {
+  margin-left: 10px;
+  text-decoration: line-through;
+}
 
-      .ai-description {
-        background: #f9f7ff;
-        padding: 15px;
-        border-radius: 10px;
-        border-left: 4px solid #6f42c1;
-        font-size: 14px;
-        line-height: 1.6;
-      }
+/* STOCK */
 
-      .quantity-box {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin: 25px 0;
-      }
+.stock {
+  color: green;
+}
 
-      .quantity-box button {
-        background: #111;
-        color: white;
-        border: none;
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-        font-size: 18px;
-        transition: 0.3s;
-      }
+.out {
+  color: red;
+}
 
-      .quantity-box button:hover {
-        background: #333;
-      }
+/* QTY */
 
-      .btn-group-custom {
-        display: flex;
-        gap: 20px;
-      }
+.qty-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 30px 0;
+}
 
-      .buy-btn {
-        background: transparent;
-        border: 2px solid black;
-        padding: 12px 30px;
-        border-radius: 30px;
-        transition: 0.3s;
-      }
+.qty-box button {
+  width: 38px;
+  height: 38px;
+  border: none;
+  background: #111;
+  color: white;
+  font-size: 18px;
+  border-radius: 8px;
+  transition: 0.2s;
+}
 
-      .buy-btn:hover {
-        background: black;
-        color: white;
-      }
+.qty-box button:hover {
+  background: #333;
+}
 
-      .fade-in {
-        animation: fadeIn 0.8s ease-in-out;
-      }
+.qty-box span {
+  font-size: 18px;
+  font-weight: 600;
+  width: 40px;
+  text-align: center;
+}
 
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
+/* BUTTON */
 
-      `}</style>
+.btns {
+  display: flex;
+  gap: 30px;
+  margin-top: 35px;
+}
+
+
+/* ADD TO CART */
+
+.add-btn {
+  background: linear-gradient(45deg, #ff8008, #ffc837);
+  border: none;
+  padding: 12px 25px;
+  border-radius: 30px;
+  font-weight: 600;
+  color: white;
+  transition: 0.3s;
+}
+
+.add-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+}
+
+
+/* BUY NOW */
+
+.buy-btn {
+  background: black;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 30px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.buy-btn:hover {
+  background: #333;
+  transform: translateY(-2px);
+}
+
+/* DESCRIPTION */
+
+.desc-box {
+  margin-top: 20px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.desc-box table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.product-markdown {
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 24px 26px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  border: 1px solid #eef2f7;
+  line-height: 1.75;
+}
+
+.pm-h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 1.25rem 0;
+  padding-bottom: 0.7rem;
+  border-bottom: 2px solid #e2e8f0;
+  letter-spacing: -0.02em;
+}
+
+.pm-h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #2563eb;
+  margin-top: 1.7rem;
+  margin-bottom: 0.9rem;
+  padding-left: 12px;
+  border-left: 4px solid #2563eb;
+  background: linear-gradient(to right, rgba(37, 99, 235, 0.08), transparent);
+  border-radius: 6px;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+}
+
+.pm-p {
+  font-size: 1rem;
+  color: #475569;
+  margin-bottom: 1rem;
+  text-align: justify;
+}
+
+.pm-strong {
+  color: #111827;
+  font-weight: 700;
+}
+
+.pm-ul {
+  margin: 0.4rem 0 1.1rem 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.pm-li {
+  position: relative;
+  padding-left: 1.6rem;
+  margin-bottom: 0.7rem;
+  color: #475569;
+  font-size: 0.98rem;
+}
+
+.pm-li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #2563eb;
+  font-size: 1.2rem;
+  line-height: 1.2;
+}
+
+.pm-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 1rem;
+  margin-bottom: 1.2rem;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+}
+
+.pm-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  min-width: 520px;
+}
+
+.pm-thead {
+  background: linear-gradient(to right, #eff6ff, #f8fafc);
+}
+
+.pm-th {
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e293b;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.pm-td {
+  padding: 13px 16px;
+  font-size: 0.95rem;
+  color: #475569;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.pm-table tr:last-child .pm-td {
+  border-bottom: none;
+}
+
+.pm-table tr:hover {
+  background: #f8fafc;
+}
+
+@media (max-width: 768px) {
+  .product-markdown {
+    padding: 18px 16px;
+    border-radius: 16px;
+  }
+
+  .pm-h2 {
+    font-size: 1.55rem;
+  }
+
+  .pm-h3 {
+    font-size: 1.05rem;
+    margin-top: 1.4rem;
+  }
+
+  .pm-p,
+  .pm-li,
+  .pm-th,
+  .pm-td {
+    font-size: 0.92rem;
+  }
+}
+
+`}</style>
+
     </div>
   );
 };

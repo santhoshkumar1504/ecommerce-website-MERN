@@ -20,8 +20,8 @@ const ProductCarousel = ({ products = [] }) => {
 
   const settings = {
     dots: false,
-    infinite: true,
-    speed: 600,
+    infinite: products.length > 4,
+    speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
     autoplay: false,
@@ -29,61 +29,71 @@ const ProductCarousel = ({ products = [] }) => {
     responsive: [
       { breakpoint: 1200, settings: { slidesToShow: 3 } },
       { breakpoint: 992, settings: { slidesToShow: 2 } },
+      { breakpoint: 768, settings: { slidesToShow: 1 } },
     ],
+  };
+
+  const handleAddToCart = (e, item) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("Add to cart:", item.productName);
   };
 
   const renderCard = (item) => {
     const imageUrl = `http://localhost:5000/images/${item?.pic?.fileName}`;
+    const shortDesc = item?.productDesc
+      ? item.productDesc.replace(/[#*_`>|-]/g, "").slice(0, 55)
+      : "";
 
     return (
-      <div key={item._id} className="slide-item">
-
-        {/* ✅ Wrap entire card with Link */}
+      <div key={item._id} className="pcard-slide">
         <Link
           to={`/products/${item._id}`}
-          className="text-decoration-none text-dark"
+          className="pcard-link"
         >
-          <div className="card-wrapper">
-
-            <div className="image-box">
-              <img src={imageUrl} alt={item.productName} />
+          <div className="pcard-box">
+            <div className="pcard-image-area">
+              <img
+                src={imageUrl}
+                alt={item.productName}
+                className="pcard-image"
+              />
             </div>
 
-            <div className="card-body">
-              <h6>{item.productName}</h6>
+            <div className="pcard-content">
+              <h6 className="pcard-title">{item.productName}</h6>
 
-              <p className="desc">{item.productDesc}</p>
+              <p className="pcard-desc">
+                {shortDesc}
+                {item?.productDesc?.length > 55 ? "..." : ""}
+              </p>
 
-              <div className="bottom">
-                <span className="price">
+              <div className="pcard-footer">
+                <span className="pcard-price">
                   ₹{item.discountedPrice || item.price}
                 </span>
 
-                {/* ✅ Prevent navigation when clicking button */}
                 <button
-                  className="cart-btn"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log("Add to cart clicked");
-                  }}
+                  type="button"
+                  className="pcard-add-btn"
+                  onClick={(e) => handleAddToCart(e, item)}
                 >
                   Add
                 </button>
               </div>
             </div>
-
           </div>
         </Link>
-
       </div>
     );
   };
 
   return (
-    <div className="carousel-wrapper">
-      {isMobile ? (
-        <div className="mobile-grid">
+    <div className="pcard-wrapper">
+      {products.length === 0 ? (
+        <div className="pcard-empty">No products found</div>
+      ) : isMobile ? (
+        <div className="pcard-grid">
           {products.map(renderCard)}
         </div>
       ) : (
@@ -93,90 +103,195 @@ const ProductCarousel = ({ products = [] }) => {
       )}
 
       <style>{`
-        .carousel-wrapper {
-          width: 92%;
-          margin: 40px auto;
+        .pcard-wrapper {
+          width: 94%;
+          margin: 28px auto;
         }
 
-        .mobile-grid {
+        .pcard-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
           gap: 16px;
         }
 
-        .slide-item {
+        .pcard-slide {
           padding: 8px;
+          box-sizing: border-box;
         }
 
-        .card-wrapper {
+        .pcard-link {
+          text-decoration: none;
+          color: inherit;
+          display: block;
+        }
+
+        .pcard-box {
           background: #ffffff;
-          border-radius: 18px;
+          border: 1px solid #ececec;
+          border-radius: 16px;
           overflow: hidden;
-          transition: 0.3s ease;
-          box-shadow: 0 8px 25px rgba(0,0,0,0.05);
-          height: 100%;
+          box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+          transition: all 0.3s ease;
+          height: 255px;
           display: flex;
           flex-direction: column;
         }
 
-        .card-wrapper:hover {
-          transform: translateY(-6px);
-          box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+        .pcard-box:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1);
         }
 
-        .image-box {
-          height: 200px;
-          background: #f8f8f8;
+        .pcard-image-area {
+          height: 115px;
+          background: #f7f7f7;
           display: flex;
           align-items: center;
           justify-content: center;
+          padding: 10px;
           overflow: hidden;
         }
 
-        .image-box img {
-          max-height: 180px;
+        .pcard-image {
           max-width: 100%;
-          transition: 0.4s ease;
+          max-height: 100%;
+          object-fit: contain;
+          transition: transform 0.3s ease;
         }
 
-        .card-body {
-          padding: 14px;
+        .pcard-box:hover .pcard-image {
+          transform: scale(1.05);
+        }
+
+        .pcard-content {
+          padding: 12px;
           display: flex;
           flex-direction: column;
           flex: 1;
         }
 
-        .card-body .desc {
-          white-space: nowrap;
+        .pcard-title {
+          font-size: 15px;
+          font-weight: 700;
+          color: #222;
+          margin: 0 0 8px;
+          line-height: 1.35;
+          min-height: 40px;
+
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
           overflow: hidden;
-          text-overflow: ellipsis;
         }
 
-        .bottom {
+        .pcard-desc {
+          font-size: 12px;
+          color: #666;
+          line-height: 1.45;
+          margin: 0 0 10px;
+          min-height: 34px;
+
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .pcard-footer {
           margin-top: auto;
           display: flex;
           justify-content: space-between;
           align-items: center;
+          gap: 10px;
         }
 
-        .price {
+        .pcard-price {
+          font-size: 16px;
           font-weight: 700;
-          font-size: 15px;
-          color: #e63946;
+          color: #e53935;
+          white-space: nowrap;
         }
 
-        .cart-btn {
+        .pcard-add-btn {
           background: #111;
           color: #fff;
           border: none;
-          padding: 6px 12px;
-          border-radius: 25px;
+          border-radius: 22px;
+          padding: 6px 14px;
           font-size: 12px;
-          transition: 0.3s ease;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
         }
 
-        .cart-btn:hover {
+        .pcard-add-btn:hover {
           background: #ff6b00;
+        }
+
+        .pcard-add-btn:active {
+          transform: scale(0.97);
+        }
+
+        .pcard-empty {
+          text-align: center;
+          padding: 24px;
+          color: #666;
+          background: #fff;
+          border-radius: 12px;
+          border: 1px solid #eee;
+        }
+
+        .pcard-wrapper .slick-prev,
+        .pcard-wrapper .slick-next {
+          z-index: 2;
+          width: 34px;
+          height: 34px;
+          border-radius: 50%;
+          background: #ffffff;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+        }
+
+        .pcard-wrapper .slick-prev:before,
+        .pcard-wrapper .slick-next:before {
+          color: #111;
+          font-size: 18px;
+        }
+
+        .pcard-wrapper .slick-prev {
+          left: -6px;
+        }
+
+        .pcard-wrapper .slick-next {
+          right: -6px;
+        }
+
+        @media (max-width: 768px) {
+          .pcard-box {
+            height: 240px;
+          }
+
+          .pcard-image-area {
+            height: 100px;
+          }
+
+          .pcard-title {
+            font-size: 14px;
+            min-height: 38px;
+          }
+
+          .pcard-desc {
+            font-size: 11px;
+            min-height: 30px;
+          }
+
+          .pcard-price {
+            font-size: 15px;
+          }
+
+          .pcard-add-btn {
+            padding: 5px 12px;
+            font-size: 11px;
+          }
         }
       `}</style>
     </div>

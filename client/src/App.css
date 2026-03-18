@@ -2,6 +2,9 @@
     padding: 0;
     margin: 0;
 }
+body{
+  background: linear-gradient(135deg, #fff8f2, #fff);
+}
 
 /* Navbar style */
 

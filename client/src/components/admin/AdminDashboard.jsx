@@ -10,6 +10,7 @@ import { RxDashboard } from "react-icons/rx";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useLocation } from "react-router-dom";
+import { MdOutlineDescription } from "react-icons/md";
 
 const AdminDashboard = () => {
 
@@ -92,6 +93,7 @@ const AdminDashboard = () => {
     return (
         <div className='admin-container'>
             <section className='admin-section'>
+
 
                 {/* HEADER */}
                 <header className='header'>
@@ -267,6 +269,22 @@ const AdminDashboard = () => {
                                 <span className="notif-link">
                                     <FaBell className="me-2" /> Notifications
                                     {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
+                                </span>
+                            </NavLink>
+                        </li>
+
+                        <li>
+                            <NavLink
+                                to="/admin/editDescription"
+                                className={({ isActive }) => (isActive ? "active-link" : "")}
+                                onClick={() => {
+                                    closeSidebar();
+                                    // refresh count when open page
+                                    fetchUnreadCount();
+                                }}
+                            >
+                                <span className="notif-link">
+                                    <MdOutlineDescription className="me-2" />Generate Description
                                 </span>
                             </NavLink>
                         </li>

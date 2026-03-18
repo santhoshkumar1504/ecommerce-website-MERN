@@ -3,7 +3,7 @@ const Product=require('../models/Products');
 const createReview=async (req,res,next)=>{
     try{
         const {id}=req.params;
-        const {userId}=req.user;
+        const {_id}=req.user;
         const {name,rating,comment}=req.body;
         const product=await Product.findById(id);        
         if(!product)
@@ -13,7 +13,7 @@ const createReview=async (req,res,next)=>{
         }
         for(let i=0;i<product.reviews.length;i++)
         {
-        if(product.reviews[i].user==userId)
+        if(product.reviews[i].user==_id)
         {
             res.code=400;
             throw new Error("You reviewed already");
@@ -26,7 +26,7 @@ const createReview=async (req,res,next)=>{
         product.numReview = oldNumReview + 1;
         product.ratings =(oldRating * oldNumReview + rating) / product.numReview;
 
-        product.reviews=[...product.reviews,{user:userId,name:name,rating:rating,comment:comment}];
+        product.reviews=[...product.reviews,{user:_id,name:name,rating:rating,comment:comment}];
         await product.save();
         
         res.status(200).json({code:200,status:true,message:"Review added successfully"});

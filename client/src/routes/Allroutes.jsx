@@ -28,6 +28,7 @@ import CancelledOrders from '../components/admin/CancelledOrders'
 import SearchLayout from '../components/search/SearchLayout'
 import CartPage from '../pages/CartPage'
 import AdminNotifications from '../components/admin/AdminNotifications'
+import ProductDescriptionEditor from '../components/admin/ProductDescriptionEditor'
 
 
 const Allroutes = () => {
@@ -76,6 +77,7 @@ const Allroutes = () => {
         <Route path="orders/placed" element={<PlacedOrders />} />
         <Route path="orders/cancelled" element={<CancelledOrders />} />
         <Route path="notifications" element={<AdminNotifications />} />
+        <Route path='editDescription' element={<ProductDescriptionEditor/>}/>
       </Route>
 
       </Routes>
